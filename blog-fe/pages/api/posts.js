@@ -9,3 +9,21 @@ export async function fetchBlogPosts() {
     return [];
   }
 }
+
+export async function fetchBlogPostById(postId) {
+  const response = await fetch(`/api/posts/${postId}`);
+  const data = await response.json();
+  return data;
+}
+
+export async function updateBlogPost() {
+  const response = await fetch(`/api/posts/${postId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(postData),
+  });
+  const data = await response.json();
+  return data;
+}
