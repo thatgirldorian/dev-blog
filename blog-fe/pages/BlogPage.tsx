@@ -15,8 +15,14 @@ export const BlogPage = () => {
   }, []);
 
   return (
-    <div className='p-4'>
-      <h1 className='text-2xl font-bold'>Read our blog</h1>
+    <div className='p-4 mt-12'>
+      <div className='flex gap-32'>
+        <h1 className='text-2xl font-bold'>Read our blog</h1>
+        <button className='bg-green-500 text-white px-4 py-2 rounded'>
+          Create post
+        </button>
+      </div>
+
       <ul className='flex flex-wrap -mx-4'>
         {blogPosts.map((post) => (
           <li

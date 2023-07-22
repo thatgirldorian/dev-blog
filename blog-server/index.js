@@ -22,6 +22,50 @@ app.use(express.json());
 // Register API routes
 app.use('/api', postsRoute);
 
+//Create a new post
+app.post('/api/posts', async (res, req) => {
+  const { title, content, author, draft } = req.body;
+
+  try {
+    const newPost = await Post.create({
+      title,
+      content,
+      author,
+      draft,
+      date: Date.now(),
+    });
+    res.status(201).json(newPost);
+  } catch (error) {
+    console.log('There was an error creating this blog post', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+//Edit a blog post
+app.put('/api/posts/:id', async (res, req) => {
+  const postId = req.params.id;
+  const { title, author, content, draft } = req.body;
+
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(postId, {
+      title,
+      content,
+      author,
+      draft,
+      updatedAt: new Date(),
+    });
+
+    if (!updatedPost) {
+      return res.status(404).json({ message: 'No blog post found.' });
+    }
+
+    res.json(updatedPost);
+  } catch (error) {
+    console.log('There was an error updating this blog post.', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 // Start the server
 const port = process.env.PORT || 5001;
 app.listen(port, () => {
