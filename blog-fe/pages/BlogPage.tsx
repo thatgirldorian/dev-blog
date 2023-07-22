@@ -17,11 +17,11 @@ export const BlogPage = () => {
   return (
     <div className='p-4'>
       <h1 className='text-2xl font-bold'>Read our blog</h1>
-      <ul>
+      <ul className='flex flex-wrap -mx-4'>
         {blogPosts.map((post) => (
           <li
             key={post._id}
-            className='border rounded p-4 mb-4 border-gray-500 min-w-[300px]'
+            className='border rounded border-gray-500 w-full sm:w-1/2 sm:mb-0 sm:px-4 p-4 mt-4 ml-4 max-w-[550px]'
           >
             <h2 className='text-lg font-bold mb-2'>{post.title}</h2>
             <p className='mb-4'>{post.content}</p>
