@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 
-// Import your Mongoose model (assuming you named it Blog)
-const Blog = require('./blogModel');
+// Import Mongoose model
+const Post = require('./postModel');
 
 // Define the API route to fetch blog post data
 router.get('/posts', async (req, res) => {
   try {
     // Fetch all blog posts from the database
-    const blogPosts = await Blog.find();
+    const blogPosts = await Post.find({});
+    console.log('Blog posts fetched:', blogPosts);
 
     // Return the blog post data as JSON response
     res.json(blogPosts);

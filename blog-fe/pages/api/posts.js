@@ -1,5 +1,11 @@
 export async function fetchBlogPosts() {
-  const response = await fetch('/api/posts'); // Replace with your actual API route URL
-  const data = await response.json();
-  return data;
+  try {
+    const response = await fetch('http://localhost:5001/api/posts');
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching blog posts:', error);
+    return [];
+  }
 }
