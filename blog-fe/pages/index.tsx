@@ -1,5 +1,4 @@
-// pages/index.tsx
-import Head from 'next/head';
+import { BlogPage } from './BlogPage';
 
 export default function Home() {
   return (
@@ -12,6 +11,7 @@ export default function Home() {
       </header>
       <div>
         <h2 className='px-12 mt-12'>Blog</h2>
+        <BlogPage />
       </div>
     </div>
   );
