@@ -16,7 +16,7 @@ export const BlogPage = () => {
   return (
     <div>
       <h1>Blog Posts</h1>
-      <ul>
+      {/* <ul>
         {blogPosts.map((post) => (
           <li key={post._id}>
             <h2>{post.title}</h2>
@@ -25,7 +25,7 @@ export const BlogPage = () => {
             <p>Date: {post.date}</p>
           </li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   );
 };
