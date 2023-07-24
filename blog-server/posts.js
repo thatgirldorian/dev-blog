@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Import Mongoose model
-const Post = require('./postModel');
+const Post = require('./models/postModel');
 
 // Define the API route to fetch blog post data
 router.get('/posts', async (req, res) => {

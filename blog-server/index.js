@@ -5,6 +5,9 @@ const mongoose = require('mongoose');
 const postsRoute = require('./posts');
 const cors = require('cors');
 
+// Import Mongoose model
+const Post = require('./models/postModel');
+
 const app = express();
 // Enable CORS
 app.use(cors());

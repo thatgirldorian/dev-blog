@@ -9,7 +9,8 @@ const EditPostPage = () => {
     return <div>Loading...</div>;
   }
 
-  return <EditPost postId={postId} />;
+  const postIdString = Array.isArray(postId) ? postId[0] : postId;
+  return <EditPost postId={postIdString} />;
 };
 
 export default EditPostPage;
