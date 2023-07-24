@@ -21,6 +21,17 @@ export const BlogPage = () => {
     return <div>Loading...</div>;
   }
 
+  const truncateContent = (content, wordLimit) => {
+    const words = content.split(' ');
+    const truncatedContent = words.slice(0, wordLimit).join(' ');
+
+    if (words.length > wordLimit) {
+      return truncatedContent + '...';
+    }
+
+    return truncatedContent;
+  };
+
   return (
     <div className='p-4 mt-12'>
       <div className='flex gap-32'>
@@ -37,7 +48,7 @@ export const BlogPage = () => {
             className='border rounded border-gray-500 w-full sm:w-1/2 sm:mb-0 sm:px-4 p-4 mt-4 ml-4 max-w-[550px]'
           >
             <h2 className='text-lg font-bold mb-2'>{post.title}</h2>
-            <p className='mb-4'>{post.content}</p>
+            <p className='mb-4'>{truncateContent(post.content, 25)}</p>
             <p>Author: {post.author}</p>
             <p>Date: {post.date}</p>
             <div className='flex gap-8 mt-4'>
