@@ -4,6 +4,7 @@ import EditPost from '../../blog-fe/pages/EditPost';
 const EditPostPage = () => {
   const router = useRouter();
   const { postId } = router.query;
+  console.log(postId);
 
   if (!postId) {
     return <div>Loading...</div>;

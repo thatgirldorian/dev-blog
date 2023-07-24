@@ -7,6 +7,7 @@ import { BlogContext } from './contexts/BlogContext';
 const EditPost = ({ postId }) => {
   const router = useRouter();
   const { blogData, setBlogData } = useContext(BlogContext);
+
   const [post, setPost] = useState({
     title: '',
     content: '',
@@ -18,14 +19,28 @@ const EditPost = ({ postId }) => {
     // Fetch the blog post data by its ID when the component mounts
     async function fetchPost() {
       const postData = await fetchBlogPostById(postId);
-      setPost(postData);
+      setPost({
+        title: postData.title,
+        content: postData.content,
+        author: postData.author,
+        draft: postData.draft,
+      });
     }
     fetchPost();
   }, [postId]);
 
+  const handleContentChange = (event) => {
+    const contentValue = event.target.value;
+    setPost({ ...post, content: contentValue });
+  };
+
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setPost({ ...post, [name]: value });
+    const { name, value, type, checked } = event.target;
+    if (type === 'checkbox') {
+      setPost({ ...post, [name]: checked });
+    } else {
+      setPost({ ...post, [name]: value });
+    }
   };
 
   const handleDraftChange = (event) => {
@@ -41,6 +56,11 @@ const EditPost = ({ postId }) => {
         author: post.author,
         draft: post.draft,
       });
+
+      if (!post) {
+        // If post is null (still loading data), show a loading message or spinner
+        return <div>Loading...</div>;
+      }
 
       router.push('/');
 
@@ -65,6 +85,9 @@ const EditPost = ({ postId }) => {
   return (
     <div className='max-w-xl mx-12 mt-12'>
       <h1 className='text-2xl font-bold mb-4'>Edit Blog Post</h1>
+      <button className='bg-blue-500 text-white px-4 py-2 rounded'>
+        Save as draft
+      </button>
       <div className='mb-4'>
         <label className='block mb-2' htmlFor='title'>
           Title:
@@ -86,7 +109,7 @@ const EditPost = ({ postId }) => {
           className='w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
           id='content'
           value={post.content}
-          onChange={handleInputChange}
+          onChange={handleContentChange}
         />
       </div>
       <div className='mb-4'>
@@ -117,7 +140,7 @@ const EditPost = ({ postId }) => {
         className='bg-green-500 text-white px-4 py-2 rounded'
         onClick={handleSave}
       >
-        Save
+        Publish
       </button>
     </div>
   );
