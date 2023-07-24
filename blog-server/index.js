@@ -23,7 +23,7 @@ app.use(express.json());
 app.use('/api', postsRoute);
 
 //Create a new post
-app.post('/api/posts', async (res, req) => {
+app.post('/api/posts', async (req, res) => {
   const { title, content, author, draft } = req.body;
 
   try {
@@ -42,7 +42,7 @@ app.post('/api/posts', async (res, req) => {
 });
 
 //Edit a blog post
-app.put('/api/posts/:id', async (res, req) => {
+app.put('/api/posts/:id', async (req, res) => {
   const postId = req.params.id;
   const { title, author, content, draft } = req.body;
 

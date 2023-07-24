@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { fetchBlogPosts } from '../pages/api/posts';
+import Link from 'next/link';
 
 export const BlogPage = () => {
   const [blogPosts, setBlogPosts] = useState([]);
@@ -34,9 +35,12 @@ export const BlogPage = () => {
             <p>Author: {post.author}</p>
             <p>Date: {post.date}</p>
             <div className='flex gap-8 mt-4'>
-              <button className='bg-blue-500 text-white px-4 py-2 rounded'>
+              <Link
+                href={`/edit/${post._id}`}
+                className='bg-blue-500 text-white px-4 py-2 rounded'
+              >
                 Edit
-              </button>
+              </Link>
               <button className='bg-red-500 text-white px-4 py-2 rounded'>
                 Delete
               </button>
