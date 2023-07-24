@@ -33,7 +33,7 @@ const EditPost = ({ postId }) => {
   const handleSave = async () => {
     try {
       // Send the updated post data, including draft status, to the backend
-      await updateBlogPost(postId, {
+      await updateBlogPost(post._id, {
         title: post.title,
         content: post.content,
         author: post.author,

@@ -16,14 +16,19 @@ export async function fetchBlogPostById(postId) {
   return data;
 }
 
-export async function updateBlogPost() {
-  const response = await fetch(`/api/posts/${postId}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(postData),
-  });
-  const data = await response.json();
-  return data;
+export async function updateBlogPost(postId, postData) {
+  try {
+    const response = await fetch(`/api/posts/${postId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(postData),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error updating blog post:', error);
+    throw error;
+  }
 }
