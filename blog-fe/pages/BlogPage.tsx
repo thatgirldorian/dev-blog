@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { BlogContext } from './contexts/BlogContext';
 import { fetchBlogPosts } from '../pages/api/posts';
 import Link from 'next/link';
 
 export const BlogPage = () => {
+  const { blogData } = useContext(BlogContext);
   const [blogPosts, setBlogPosts] = useState([]);
 
   useEffect(() => {
@@ -15,6 +17,10 @@ export const BlogPage = () => {
     fetchData();
   }, []);
 
+  if (!blogData.length) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className='p-4 mt-12'>
       <div className='flex gap-32'>
@@ -25,7 +31,7 @@ export const BlogPage = () => {
       </div>
 
       <ul className='flex flex-wrap -mx-4'>
-        {blogPosts.map((post) => (
+        {blogData.map((post) => (
           <li
             key={post._id}
             className='border rounded border-gray-500 w-full sm:w-1/2 sm:mb-0 sm:px-4 p-4 mt-4 ml-4 max-w-[550px]'

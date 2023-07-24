@@ -1,8 +1,10 @@
 // EditPost.js (Edit component for editing a blog post)
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { fetchBlogPostById, updateBlogPost } from '../pages/api/posts';
+import { BlogContext } from './contexts/BlogContext';
 
 const EditPost = ({ postId }) => {
+  const { blogData, setBlogData } = useContext(BlogContext);
   const [post, setPost] = useState({
     title: '',
     content: '',
@@ -37,6 +39,18 @@ const EditPost = ({ postId }) => {
         author: post.author,
         draft: post.draft,
       });
+
+      //update the blog data in the context with the edited data
+      setBlogData((prevBlogData: { _id: any }[]) => {
+        const updaatedBlogData = prevBlogData.map((postItem: { _id: any }) => {
+          if (postItem._id === postId) {
+            return { ...postItem, ...post };
+          }
+          return postItem;
+        });
+        return updaatedBlogData;
+      });
+
       // Handle success, e.g., show a success message or redirect to the post page
     } catch (error) {
       // Handle error, e.g., show an error message
@@ -56,7 +70,15 @@ const EditPost = ({ postId }) => {
           onChange={handleInputChange}
         />
       </label>
-      {/* Add other input fields for content and author */}
+      <label>
+        Content:
+        <textarea value={post.content} />
+      </label>
+      <label>
+        Author:
+        <input type='text' name='title' value={post.author} />
+      </label>
+
       <label>
         Draft:
         <input
@@ -65,7 +87,12 @@ const EditPost = ({ postId }) => {
           onChange={handleDraftChange}
         />
       </label>
-      <button onClick={handleSave}>Save</button>
+      <button
+        className='bg-green-500 text-white px-4 py-2 rounded'
+        onClick={handleSave}
+      >
+        Save
+      </button>
     </div>
   );
 };
