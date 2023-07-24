@@ -1,18 +1,18 @@
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { BlogContext } from './contexts/BlogContext';
-import { fetchBlogPosts } from '../pages/api/posts';
+import { fetchBlogPosts } from './api/posts';
+
 import Link from 'next/link';
 
 export const BlogPage = () => {
-  const { blogData } = useContext(BlogContext);
-  const [blogPosts, setBlogPosts] = useState([]);
+  const { blogData, setBlogData } = useContext(BlogContext);
 
   useEffect(() => {
     // Fetch the blog post data when the component mounts
     async function fetchData() {
       const data = await fetchBlogPosts();
       console.log(data);
-      setBlogPosts(data);
+      setBlogData(data); // Update the blogData in the context with the fetched data
     }
     fetchData();
   }, []);
