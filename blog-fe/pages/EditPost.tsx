@@ -4,16 +4,11 @@ import { useRouter } from 'next/router';
 import { fetchBlogPostById, updateBlogPost } from '../pages/api/posts';
 import { BlogContext } from './contexts/BlogContext';
 
-const EditPost = ({ postId }) => {
+const EditPost = ({ postId, postData }) => {
   const router = useRouter();
   const { blogData, setBlogData } = useContext(BlogContext);
 
-  const [post, setPost] = useState({
-    title: '',
-    content: '',
-    author: '',
-    draft: false, // Default value for draft status
-  });
+  const [post, setPost] = useState(postData);
 
   useEffect(() => {
     // Fetch the blog post data by its ID when the component mounts
@@ -82,8 +77,13 @@ const EditPost = ({ postId }) => {
     }
   };
 
+  const handleRedirect = () => {
+    router.push('/');
+  };
+
   return (
     <div className='max-w-xl mx-12 mt-12'>
+      <button onClick={handleRedirect}>Home</button>
       <h1 className='text-2xl font-bold mb-4'>Edit Blog Post</h1>
       <button className='bg-blue-500 text-white px-4 py-2 rounded'>
         Save as draft
@@ -106,7 +106,7 @@ const EditPost = ({ postId }) => {
           Content:
         </label>
         <textarea
-          className='w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
+          className='textarea-input w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
           id='content'
           value={post.content}
           onChange={handleContentChange}

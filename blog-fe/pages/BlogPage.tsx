@@ -1,11 +1,13 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { BlogContext } from './contexts/BlogContext';
 import { fetchBlogPosts } from './api/posts';
+import EditPost from './EditPost';
 
 import Link from 'next/link';
 
 export const BlogPage = () => {
   const { blogData, setBlogData } = useContext(BlogContext);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     // Fetch the blog post data when the component mounts
@@ -54,6 +56,7 @@ export const BlogPage = () => {
             <div className='flex gap-8 mt-4'>
               <Link
                 href={`/edit/${post._id}`}
+                passHref
                 className='bg-blue-500 text-white px-4 py-2 rounded'
               >
                 Edit
@@ -65,6 +68,9 @@ export const BlogPage = () => {
           </li>
         ))}
       </ul>
+
+      {/* Render the EditPost component with the selected blog post data */}
+      {selectedPost && <EditPost postData={selectedPost} />}
     </div>
   );
 };

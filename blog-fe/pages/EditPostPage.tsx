@@ -1,17 +1,33 @@
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import EditPost from '../../blog-fe/pages/EditPost';
+import { fetchBlogPostById } from './api/posts';
+import EditPost from './EditPost';
 
 const EditPostPage = () => {
   const router = useRouter();
   const { postId } = router.query;
-  console.log(postId);
+  const [postData, setPostData] = useState(null);
 
-  if (!postId) {
+  useEffect(() => {
+    if (postId) {
+      // Fetch the blog post data by its ID when the component mounts
+      async function fetchPost() {
+        try {
+          const postData = await fetchBlogPostById(postId);
+          setPostData(postData);
+        } catch (error) {
+          console.error('Error fetching blog post:', error);
+        }
+      }
+      fetchPost();
+    }
+  }, [postId]);
+
+  if (!postId || !postData) {
     return <div>Loading...</div>;
   }
 
-  const postIdString = Array.isArray(postId) ? postId[0] : postId;
-  return <EditPost postId={postIdString} />;
+  return <EditPost postId={postId} postData={postData} />;
 };
 
 export default EditPostPage;

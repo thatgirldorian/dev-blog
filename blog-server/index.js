@@ -25,6 +25,20 @@ app.use(express.json());
 // Register API routes
 app.use('/api', postsRoute);
 
+// Make sure you have the correct route for fetching a single post by ID
+app.get('/api/posts/:id', async (req, res) => {
+  const postId = req.params.id;
+
+  // Use your Mongoose model to find the post by ID in the database
+  try {
+    const post = await Post.findById(postId);
+    res.status(200).json(post);
+  } catch (error) {
+    console.error('Error fetching blog post:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 //Create a new post
 app.post('/api/posts', async (req, res) => {
   const { title, content, author, draft } = req.body;
