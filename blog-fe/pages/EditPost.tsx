@@ -6,10 +6,12 @@ import { BlogContext } from './contexts/BlogContext';
 
 const EditPost = ({ postId, postData }) => {
   const router = useRouter();
-  const [previewMode, setPreviewMode] = useState(false);
+
   const { blogData, setBlogData } = useContext(BlogContext);
 
   const [post, setPost] = useState(postData);
+
+  const [previewMode, setPreviewMode] = useState(false);
 
   useEffect(() => {
     // Fetch the blog post data by its ID when the component mounts
@@ -99,6 +101,10 @@ const EditPost = ({ postId, postData }) => {
     }
   };
 
+  const handlePreviewToggle = () => {
+    setPreviewMode((prevPreviewMode) => !prevPreviewMode);
+  };
+
   return (
     <div className='max-w-xl mx-12 mt-12'>
       <button onClick={handleRedirect}>Home</button>
@@ -111,79 +117,81 @@ const EditPost = ({ postId, postData }) => {
       </button>
       <button
         className='bg-yellow-500 text-white px-4 py-2 rounded ml-4'
-        onClick={() => setPreviewMode(!previewMode)}
+        onClick={handlePreviewToggle}
       >
-        {previewMode ? (
-          <div>
-            <h1 className='text-2xl font-bold mb-4'>{post.title}</h1>
-            <textarea
-              className='w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
-              value={post.content}
-              readOnly
-            />
-            <p>Author: {post.author}</p>
-            <p>Date: {post.date}</p>
-          </div>
-        ) : (
-          <div></div>
-          // Show edit mode content here (similar to the current content)
-        )}
+        {previewMode ? 'Edit' : 'Preview'}
       </button>
 
-      <div className='my-8'>
-        <label className='block mb-2' htmlFor='title'>
-          Title:
-        </label>
-        <input
-          className='w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
-          type='text'
-          id='title'
-          name='title'
-          value={post.title}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className='mb-4'>
-        <label className='block mb-2' htmlFor='content'>
-          Content:
-        </label>
-        <textarea
-          className='textarea-input w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
-          id='content'
-          value={post.content}
-          onChange={handleContentChange}
-        />
-      </div>
-      <div className='mb-4'>
-        <label className='block mb-2' htmlFor='author'>
-          Author:
-        </label>
-        <input
-          className='w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
-          type='text'
-          id='author'
-          name='author'
-          value={post.author}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className='mb-4'>
-        <label className='block mb-2' htmlFor='draft'>
-          Draft:
-        </label>
-        <input
-          type='checkbox'
-          id='draft'
-          checked={post.draft}
-          onChange={handleDraftChange}
-        />
-      </div>
-      <button
-        className='bg-green-500 text-white px-4 py-2 rounded'
-        onClick={handleSave}
-      >
-        Publish
-      </button>
+      {previewMode ? (
+        <div>
+          {/* Add your preview view here */}
+          <h2 className='text-[24px] font-bold my-2'>{post.title}</h2>
+          <p className='text-[18px] text-gray-600 font-medium my-2'>
+            {post.author}
+          </p>
+          <p className=' my-4'>{post.content}</p>
+
+          {/* Add any other details you want to show in the preview */}
+        </div>
+      ) : (
+        <div>
+          <div className='my-8'>
+            <label className='block mb-2' htmlFor='title'>
+              Title:
+            </label>
+            <input
+              className='w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
+              type='text'
+              id='title'
+              name='title'
+              value={post.title}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className='mb-4'>
+            <label className='block mb-2' htmlFor='content'>
+              Content:
+            </label>
+            <textarea
+              className='textarea-input w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
+              id='content'
+              value={post.content}
+              onChange={handleContentChange}
+            />
+          </div>
+          <div className='mb-4'>
+            <label className='block mb-2' htmlFor='author'>
+              Author:
+            </label>
+            <input
+              className='w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
+              type='text'
+              id='author'
+              name='author'
+              value={post.author}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className='mb-4'>
+            <label className='block mb-2' htmlFor='draft'>
+              Draft:
+            </label>
+            <input
+              type='checkbox'
+              id='draft'
+              checked={post.draft}
+              onChange={handleDraftChange}
+            />
+          </div>
+
+          <button
+            className='bg-green-500 text-white px-4 py-2 rounded'
+            onClick={handleSave}
+          >
+            Publish
+          </button>
+        </div>
+      )}
     </div>
   );
 };
