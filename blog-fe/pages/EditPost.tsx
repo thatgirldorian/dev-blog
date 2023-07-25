@@ -6,6 +6,7 @@ import { BlogContext } from './contexts/BlogContext';
 
 const EditPost = ({ postId, postData }) => {
   const router = useRouter();
+  const [previewMode, setPreviewMode] = useState(false);
   const { blogData, setBlogData } = useContext(BlogContext);
 
   const [post, setPost] = useState(postData);
@@ -81,14 +82,55 @@ const EditPost = ({ postId, postData }) => {
     router.push('/');
   };
 
+  const handleSaveAsDraft = async () => {
+    try {
+      // Send the draft post data to the backend
+      await updateBlogPost(postId, {
+        title: post.title,
+        content: post.content,
+        author: post.author,
+        draft: true, // Set the draft status to true for saving as draft
+      });
+      console.log('Draft has been saved');
+      // Handle success, e.g., show a success message or redirect to the post page
+    } catch (error) {
+      // Handle error, e.g., show an error message
+      console.error('Error saving blog post as draft:', error);
+    }
+  };
+
   return (
     <div className='max-w-xl mx-12 mt-12'>
       <button onClick={handleRedirect}>Home</button>
       <h1 className='text-2xl font-bold mb-4'>Edit Blog Post</h1>
-      <button className='bg-blue-500 text-white px-4 py-2 rounded'>
+      <button
+        onClick={handleSaveAsDraft}
+        className='bg-blue-500 text-white px-4 py-2 rounded'
+      >
         Save as draft
       </button>
-      <div className='mb-4'>
+      <button
+        className='bg-yellow-500 text-white px-4 py-2 rounded ml-4'
+        onClick={() => setPreviewMode(!previewMode)}
+      >
+        {previewMode ? (
+          <div>
+            <h1 className='text-2xl font-bold mb-4'>{post.title}</h1>
+            <textarea
+              className='w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
+              value={post.content}
+              readOnly
+            />
+            <p>Author: {post.author}</p>
+            <p>Date: {post.date}</p>
+          </div>
+        ) : (
+          <div></div>
+          // Show edit mode content here (similar to the current content)
+        )}
+      </button>
+
+      <div className='my-8'>
         <label className='block mb-2' htmlFor='title'>
           Title:
         </label>
