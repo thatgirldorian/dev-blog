@@ -113,7 +113,7 @@ const EditPost = ({ postId, postData }) => {
   };
 
   useEffect(() => {
-    // Function to handle text selection
+    // Function to handle text selection & determine which text is selected
     const handleTextSelection = () => {
       const selection = window.getSelection();
       if (selection && selection.toString()) {
@@ -123,7 +123,7 @@ const EditPost = ({ postId, postData }) => {
         const end = range.endOffset;
 
         // Call the handleHighlight function with start and end positions
-        handleHighlight(start, end);
+        setHighlightedText([{ start, end }]);
       }
     };
 
