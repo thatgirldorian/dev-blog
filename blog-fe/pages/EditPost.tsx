@@ -14,8 +14,6 @@ const EditPost = ({ postId, postData }) => {
   const [post, setPost] = useState(postData);
   const [previewMode, setPreviewMode] = useState(false);
   const [highlightedText, setHighlightedText] = useState([]);
-  const [isInitialModalOpen, setIsInitialModalOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isToolbarOpen, setIsToolbarOpen] = useState(false);
   const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
@@ -121,35 +119,9 @@ const EditPost = ({ postId, postData }) => {
     // other logic
   };
 
-  const calculateToolbarPosition = () => {
-    // Logic to calculate position goes here
-    const position = { top: 100, left: 100 }; // replace with actual calculation
-    setToolbarPosition(position);
-  };
-
   const handleHighlight = (start, end) => {
     setIsToolbarOpen(true);
-    calculateToolbarPosition();
-
     setHighlightedText([...highlightedText, { start, end }]);
-    setIsInitialModalOpen(true);
-  };
-
-  const handleInitialModalClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleInitialModalOutsideClick = (event) => {
-    const modalContent = document.querySelector('.initial-modal-content');
-    if (modalContent && !modalContent.contains(event.target)) {
-      // Clicked outside the modal, close the initial modal
-      setIsInitialModalOpen(false);
-    }
-  };
-
-  const handleCloseModals = () => {
-    setIsModalOpen(false);
-    setIsInitialModalOpen(false);
   };
 
   const handleAddComment = (comment) => {
@@ -157,36 +129,83 @@ const EditPost = ({ postId, postData }) => {
     console.log('Adding comment:', comment);
   };
 
-  useEffect(() => {
-    // Function to handle text selection & determine which text is selected
-    const handleTextSelection = () => {
-      const selection = window.getSelection();
-      if (selection && selection.toString()) {
-        const ranges = [];
-        for (let i = 0; i < selection.rangeCount; i++) {
-          const range = selection.getRangeAt(i);
-          const startContainer = range.startContainer;
-          const endContainer = range.endContainer;
-          const startOffset = range.startOffset;
-          const endOffset = range.endOffset;
+  const handleTextSelection = () => {
+    const selection = window.getSelection();
+    if (selection && selection.toString()) {
+      const ranges = [];
+      for (let i = 0; i < selection.rangeCount; i++) {
+        const range = selection.getRangeAt(i);
 
-          // Add the current range to the list of ranges
-          ranges.push({ start: startOffset, end: endOffset });
-        }
+        const startOffset = range.startOffset;
+        const endOffset = range.endOffset;
 
-        // Set the highlightedText state with the array of ranges
-        setHighlightedText(ranges);
-
-        if (!isToolbarOpen) {
-          // Open the initial modal when text is highlighted and CommentModal is not open
-          setIsToolbarOpen(true);
-        }
-      } else {
-        // If nothing is selected, reset the highlightedText state and close both modals
-        setHighlightedText([]);
-        setIsToolbarOpen(false);
+        // Add the current range to the list of ranges
+        ranges.push({ start: startOffset, end: endOffset });
       }
-    };
+
+      // Set the highlightedText state with the array of ranges
+      setHighlightedText(ranges);
+
+      // Get the coordinates of the mouse when the text is selected
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      const mouseX = rect.left + rect.width / 2;
+      const mouseY = rect.top;
+
+      if (!isToolbarOpen) {
+        // Open the toolbar when text is highlighted and CommentModal is not open
+        setIsToolbarOpen(true);
+      }
+
+      // Set the toolbar position after the state is updated
+      setToolbarPosition({
+        top: mouseY - contentRef.current.offsetTop - 40, // Adjust this value to position the toolbar above the selected text
+        left: mouseX - contentRef.current.offsetLeft, // Position the toolbar relative to the left of the content container
+      });
+
+      calculateToolbarPosition(mouseX, mouseY);
+    } else {
+      // If nothing is selected, reset the highlightedText state and close the toolbar
+      setHighlightedText([]);
+      setIsToolbarOpen(false);
+    }
+  };
+
+  const calculateToolbarPosition = (mouseX, mouseY) => {
+    const contentRect = contentRef.current.getBoundingClientRect();
+    const containerTop = contentRef.current.offsetTop;
+    const containerLeft = contentRef.current.offsetLeft;
+    const containerWidth = contentRect.width;
+    const containerHeight = contentRect.height;
+
+    const toolbarWidth = 150; // Set the desired width of the toolbar
+    const toolbarHeight = 50; // Set the desired height of the toolbar
+
+    // Calculate the top and left positions of the toolbar to position it near the selected text
+    let top = mouseY - containerTop - toolbarHeight - 10; // Adjust this value to position the toolbar above the selected text
+    let left = mouseX - containerLeft - toolbarWidth / 2;
+
+    // Ensure the toolbar is within the container bounds horizontally
+    if (left < 0) {
+      left = 0;
+    } else if (left + toolbarWidth > containerWidth) {
+      left = containerWidth - toolbarWidth;
+    }
+
+    // Ensure the toolbar is within the container bounds vertically
+    if (top < 0) {
+      top = 0;
+    } else if (top + toolbarHeight > containerHeight) {
+      top = containerHeight - toolbarHeight;
+    }
+
+    setToolbarPosition({
+      top: top,
+      left: left,
+    });
+  };
+
+  useEffect(() => {
     // Add event listeners for mouseup and mousedown events
     contentRef.current?.addEventListener('mouseup', handleTextSelection);
     contentRef.current?.addEventListener('mousedown', handleTextSelection);
@@ -197,6 +216,54 @@ const EditPost = ({ postId, postData }) => {
       contentRef.current?.removeEventListener('mousedown', handleTextSelection);
     };
   }, [handleHighlight]);
+
+  //   useEffect(() => {
+  //     // Function to handle text selection & determine which text is selected
+  //     const handleTextSelection = () => {
+  //       const selection = window.getSelection();
+  //       if (selection && selection.toString()) {
+  //         const ranges = [];
+  //         for (let i = 0; i < selection.rangeCount; i++) {
+  //           const range = selection.getRangeAt(i);
+
+  //           const startOffset = range.startOffset;
+  //           const endOffset = range.endOffset;
+
+  //           // Add the current range to the list of ranges
+  //           ranges.push({ start: startOffset, end: endOffset });
+  //         }
+
+  //         // Set the highlightedText state with the array of ranges
+  //         setHighlightedText(ranges);
+
+  //         // Get the coordinates of the mouse when the text is selected
+  //         const range = selection.getRangeAt(0);
+  //         const rect = range.getBoundingClientRect();
+  //         const mouseX = rect.left + rect.width / 2;
+  //         const mouseY = rect.top;
+
+  //         calculateToolbarPosition(mouseX, mouseY);
+
+  //         if (!isToolbarOpen) {
+  //           // Open the toolbar when text is highlighted and CommentModal is not open
+  //           setIsToolbarOpen(true);
+  //         }
+  //       } else {
+  //         // If nothing is selected, reset the highlightedText state and close toolbar
+  //         setHighlightedText([]);
+  //         setIsToolbarOpen(false);
+  //       }
+  //     };
+  //     // Add event listeners for mouseup and mousedown events
+  //     contentRef.current?.addEventListener('mouseup', handleTextSelection);
+  //     contentRef.current?.addEventListener('mousedown', handleTextSelection);
+
+  //     // Clean up the event listeners when the component unmounts
+  //     return () => {
+  //       contentRef.current?.removeEventListener('mouseup', handleTextSelection);
+  //       contentRef.current?.removeEventListener('mousedown', handleTextSelection);
+  //     };
+  //   }, [handleHighlight]);
 
   return (
     <div className='max-w-xl mx-12 mt-12'>

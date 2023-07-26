@@ -5,3 +5,30 @@
 .textarea-input {
   min-height: 450px;
 }
+
+/* CSS for Highlighted Text */
+::selection {
+  background-color: #f6e05e; /* Yellow background color for selected text */
+  color: #000000; /* Black text color for selected text */
+}
+
+/* CSS for Toolbar */
+.toolbar {
+  background-color: whitesmoke; /* White background for the toolbar */
+  color: #000000; /* Black text color for toolbar items */
+  border: 1px solid #e2e8f0; /* Grey 200 border around the toolbar */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow for the toolbar */
+}
+
+.toolbar button {
+  margin: 2px; /* Spacing between toolbar items */
+}
+
+.toolbar button:hover {
+  background-color: pink; /* Spacing between toolbar items */
+}
+
+/* CSS for Divider */
+.toolbar button:not(:last-child) {
+  border-right: 1px solid #e2e8f0; /* Grey 200 divider after each toolbar item */
+}
