@@ -151,15 +151,15 @@ const EditPost = ({ postId, postData }) => {
         // Set the highlightedText state with the array of ranges
         setHighlightedText(ranges);
 
-        // Get the selected text
-        const selectedText = selection.toString().trim();
-        setSelectedText(selectedText);
-        setIsModalOpen(true); // Open the comment modal when text is highlighted
+        if (!isModalOpen) {
+          // Open the initial modal when text is highlighted and CommentModal is not open
+          setIsInitialModalOpen(true);
+        }
       } else {
-        // If nothing is selected, reset the highlightedText state
+        // If nothing is selected, reset the highlightedText state and close both modals
         setHighlightedText([]);
-        setIsModalOpen(false); // Close the comment modal when text is unhighlighted
-        setIsInitialModalOpen(false); // Close the initial modal when text is unhighlighted
+        setIsModalOpen(false);
+        setIsInitialModalOpen(false);
       }
     };
     // Add event listeners for mouseup and mousedown events
@@ -204,7 +204,6 @@ const EditPost = ({ postId, postData }) => {
                   post.content.slice(segment.start, segment.end)
                 )
                 .join(' ')}
-              onHighlight={handleHighlight}
             >
               {post.content}
             </Highlight>
@@ -289,7 +288,8 @@ const EditPost = ({ postId, postData }) => {
           isOpen={isModalOpen}
           onClose={handleCloseModals} // Close both modals when clicking "Cancel"
           onSubmit={handleAddComment}
-          selectedText={selectedText}
+          highlightedText={highlightedText}
+          handleHighlight={handleHighlight}
         />
       )}
     </div>
