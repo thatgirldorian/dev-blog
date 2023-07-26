@@ -121,6 +121,14 @@ const EditPost = ({ postId, postData }) => {
     setIsModalOpen(true);
   };
 
+  const handleInitialModalOutsideClick = (event) => {
+    const modalContent = document.querySelector('.initial-modal-content');
+    if (modalContent && !modalContent.contains(event.target)) {
+      // Clicked outside the modal, close the initial modal
+      setIsInitialModalOpen(false);
+    }
+  };
+
   const handleCloseModals = () => {
     setIsModalOpen(false);
     setIsInitialModalOpen(false);
@@ -170,6 +178,17 @@ const EditPost = ({ postId, postData }) => {
     return () => {
       contentRef.current?.removeEventListener('mouseup', handleTextSelection);
       contentRef.current?.removeEventListener('mousedown', handleTextSelection);
+    };
+
+    // Add event listener for mouseup event on the window
+    window.addEventListener('mouseup', handleTextSelection);
+    // Add event listener for click event on the window to handle closing the initial modal
+    window.addEventListener('click', handleInitialModalOutsideClick);
+
+    // Clean up the event listeners when the component unmounts
+    return () => {
+      window.removeEventListener('mouseup', handleTextSelection);
+      window.removeEventListener('click', handleInitialModalOutsideClick);
     };
   }, [handleHighlight]);
 
@@ -273,7 +292,7 @@ const EditPost = ({ postId, postData }) => {
         <div className='fixed top-0 left-0 w-screen h-screen bg-opacity-60 bg-gray-900 flex justify-center items-center'>
           {/* ... (Initial modal content) */}
           <button
-            className='bg-blue-500 text-white px-4 py-2 rounded mt-4'
+            className='initial-modal-content bg-blue-500 text-white px-4 py-2 rounded mt-4'
             onClick={handleInitialModalClick}
           >
             Add Comment
