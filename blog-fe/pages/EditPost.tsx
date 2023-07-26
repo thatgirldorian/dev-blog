@@ -3,8 +3,8 @@ import { useState, useEffect, useContext, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { fetchBlogPostById, updateBlogPost } from '../pages/api/posts';
 import { BlogContext } from './contexts/BlogContext';
-
 const Highlight = require('react-highlighter');
+import CommentModal from './CommentModal';
 
 const EditPost = ({ postId, postData }) => {
   const router = useRouter();
@@ -13,6 +13,8 @@ const EditPost = ({ postId, postData }) => {
   const [post, setPost] = useState(postData);
   const [previewMode, setPreviewMode] = useState(false);
   const [highlightedText, setHighlightedText] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedText, setSelectedText] = useState('');
 
   const contentRef = useRef();
 
@@ -112,6 +114,11 @@ const EditPost = ({ postId, postData }) => {
     setHighlightedText([...highlightedText, { start, end }]);
   };
 
+  const handleAddComment = (comment) => {
+    // Handle the comment submission here (e.g., save it to the server)
+    console.log('Adding comment:', comment);
+  };
+
   useEffect(() => {
     // Function to handle text selection & determine which text is selected
     const handleTextSelection = () => {
@@ -127,6 +134,11 @@ const EditPost = ({ postId, postData }) => {
 
           // Add the current range to the list of ranges
           ranges.push({ start: startOffset, end: endOffset });
+
+          // Get the selected text
+          const selectedText = selection.toString().trim();
+          setSelectedText(selectedText);
+          setOpenModal(true);
         }
 
         // Set the highlightedText state with the array of ranges
@@ -178,6 +190,7 @@ const EditPost = ({ postId, postData }) => {
                   post.content.slice(segment.start, segment.end)
                 )
                 .join(' ')}
+              onHighlight={() => setOpenModal(true)}
             >
               {post.content}
             </Highlight>
@@ -242,6 +255,14 @@ const EditPost = ({ postId, postData }) => {
           </button>
         </div>
       )}
+
+      {/* Render the AddCommentModal */}
+      <CommentModal
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+        onSubmit={handleAddComment}
+        selectedText={selectedText}
+      />
     </div>
   );
 };
