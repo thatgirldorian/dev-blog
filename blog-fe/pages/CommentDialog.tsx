@@ -1,29 +1,30 @@
 import React, { useState } from 'react';
-import { addComment } from './api/comments';
+import axios from 'axios';
 
-const CommentDialog = ({ onClose, onSubmit }) => {
+const CommentDialog = ({ onClose, postId }) => {
   const [commentContent, setCommentContent] = useState('');
 
   const handleCommentSubmit = async () => {
     try {
       // Prepare the comment data to send in the request
       const commentData = {
+        postId: postId,
         content: commentContent,
-        author: 'User', // Replace with the actual author's name or user ID
+        author: 'User', // You may want to set the actual author here
         date: new Date().toISOString(),
       };
 
-      // Send the HTTP POST request to add the comment
-      const newComment = await addComment(postId, commentData);
+      // Send the HTTP POST request to the backend API
+      const response = await axios.post(
+        `http://localhost:5001/api/posts/${postId}/comments`,
+        commentData
+      );
 
       // Handle the response, e.g., show a success message or refresh the comments
-      console.log('Comment added:', newComment);
+      console.log('Comment added:', response.data);
 
       // Reset the commentContent state after submission
       setCommentContent('');
-
-      // Close the comment dialog
-      onClose();
     } catch (error) {
       console.error('Error adding comment:', error);
       // Handle the error, e.g., show an error message
@@ -44,7 +45,12 @@ const CommentDialog = ({ onClose, onSubmit }) => {
       }}
     >
       {/* Add your comment input field and submit button here */}
-      <textarea rows={4} placeholder='Enter your comment'></textarea>
+      <textarea
+        rows={4}
+        placeholder='Enter your comment'
+        value={commentContent}
+        onChange={(e) => setCommentContent(e.target.value)}
+      ></textarea>
       <button onClick={handleCommentSubmit}>Submit</button>
       <button onClick={onClose}>Cancel</button>
     </div>

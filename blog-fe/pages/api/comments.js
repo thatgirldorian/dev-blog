@@ -24,6 +24,7 @@ export async function addComment(postId, commentData) {
       }
     );
     const data = await response.json();
+    console.log(postId);
     return data;
   } catch (error) {
     console.error('Error adding comment:', error);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import CommentDialog from './CommentDialog';
 
-const Toolbar = () => {
+const Toolbar = ({ postId }) => {
   const [showCommentDialog, setShowCommentDialog] = useState(false);
 
   const handleAddCommentClick = () => {
@@ -24,7 +24,11 @@ const Toolbar = () => {
         Add Comment
       </button>
       {showCommentDialog && (
-        <CommentDialog onClose={() => setShowCommentDialog(false)} />
+        <CommentDialog
+          postId={postId}
+          onSubmit={handleAddCommentClick}
+          onClose={() => setShowCommentDialog(false)}
+        />
       )}
     </div>
   );

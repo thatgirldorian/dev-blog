@@ -316,6 +316,7 @@ const EditPost = ({ postId, postData }) => {
       <div style={{ position: 'relative' }}>
         {isToolbarOpen && (
           <Toolbar
+            postId={postId}
             isOpen={isToolbarOpen}
             onClose={handleCloseToolbars} // Close the toolbar when clicking "Cancel"
             onSubmit={handleAddComment} // Handle adding comments in the Toolbar
