@@ -13,7 +13,9 @@ const EditPost = ({ postId, postData }) => {
   const [post, setPost] = useState(postData);
   const [previewMode, setPreviewMode] = useState(false);
   const [highlightedText, setHighlightedText] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
+  const [isInitialModalOpen, setIsInitialModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [selectedText, setSelectedText] = useState('');
 
   const contentRef = useRef();
@@ -112,6 +114,16 @@ const EditPost = ({ postId, postData }) => {
 
   const handleHighlight = (start, end) => {
     setHighlightedText([...highlightedText, { start, end }]);
+    setIsInitialModalOpen(true);
+  };
+
+  const handleInitialModalClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModals = () => {
+    setIsModalOpen(false);
+    setIsInitialModalOpen(false);
   };
 
   const handleAddComment = (comment) => {
@@ -134,18 +146,20 @@ const EditPost = ({ postId, postData }) => {
 
           // Add the current range to the list of ranges
           ranges.push({ start: startOffset, end: endOffset });
-
-          // Get the selected text
-          const selectedText = selection.toString().trim();
-          setSelectedText(selectedText);
-          setOpenModal(true);
         }
 
         // Set the highlightedText state with the array of ranges
         setHighlightedText(ranges);
+
+        // Get the selected text
+        const selectedText = selection.toString().trim();
+        setSelectedText(selectedText);
+        setIsModalOpen(true); // Open the comment modal when text is highlighted
       } else {
         // If nothing is selected, reset the highlightedText state
         setHighlightedText([]);
+        setIsModalOpen(false); // Close the comment modal when text is unhighlighted
+        setIsInitialModalOpen(false); // Close the initial modal when text is unhighlighted
       }
     };
     // Add event listeners for mouseup and mousedown events
@@ -190,7 +204,7 @@ const EditPost = ({ postId, postData }) => {
                   post.content.slice(segment.start, segment.end)
                 )
                 .join(' ')}
-              onHighlight={() => setOpenModal(true)}
+              onHighlight={handleHighlight}
             >
               {post.content}
             </Highlight>
@@ -256,13 +270,28 @@ const EditPost = ({ postId, postData }) => {
         </div>
       )}
 
-      {/* Render the AddCommentModal */}
-      <CommentModal
-        isOpen={openModal}
-        onClose={() => setOpenModal(false)}
-        onSubmit={handleAddComment}
-        selectedText={selectedText}
-      />
+      {isInitialModalOpen && !isModalOpen && (
+        <div className='fixed top-0 left-0 w-screen h-screen bg-opacity-60 bg-gray-900 flex justify-center items-center'>
+          {/* ... (Initial modal content) */}
+          <button
+            className='bg-blue-500 text-white px-4 py-2 rounded mt-4'
+            onClick={handleInitialModalClick}
+          >
+            Add Comment
+          </button>
+          {/* ... (Other buttons and content) */}
+        </div>
+      )}
+
+      {isModalOpen && (
+        // Render the AddCommentModal
+        <CommentModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModals} // Close both modals when clicking "Cancel"
+          onSubmit={handleAddComment}
+          selectedText={selectedText}
+        />
+      )}
     </div>
   );
 };
