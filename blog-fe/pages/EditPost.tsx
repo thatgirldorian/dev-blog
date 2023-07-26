@@ -117,16 +117,25 @@ const EditPost = ({ postId, postData }) => {
     const handleTextSelection = () => {
       const selection = window.getSelection();
       if (selection && selection.toString()) {
-        // Get the start and end positions of the selected text
-        const range = selection.getRangeAt(0);
-        const start = range.startOffset;
-        const end = range.endOffset;
+        const ranges = [];
+        for (let i = 0; i < selection.rangeCount; i++) {
+          const range = selection.getRangeAt(i);
+          const startContainer = range.startContainer;
+          const endContainer = range.endContainer;
+          const startOffset = range.startOffset;
+          const endOffset = range.endOffset;
 
-        // Call the handleHighlight function with start and end positions
-        setHighlightedText([{ start, end }]);
+          // Add the current range to the list of ranges
+          ranges.push({ start: startOffset, end: endOffset });
+        }
+
+        // Set the highlightedText state with the array of ranges
+        setHighlightedText(ranges);
+      } else {
+        // If nothing is selected, reset the highlightedText state
+        setHighlightedText([]);
       }
     };
-
     // Add event listeners for mouseup and mousedown events
     contentRef.current?.addEventListener('mouseup', handleTextSelection);
     contentRef.current?.addEventListener('mousedown', handleTextSelection);
