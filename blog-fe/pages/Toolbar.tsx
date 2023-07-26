@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import CommentDialog from './CommentDialog';
 
-const Toolbar = ({
-  onSave,
-  onSaveAsDraft,
-  onPreviewToggle,
-  showToolbar,
-  isToolbarOpen,
-}) => {
+const Toolbar = () => {
   const [showCommentDialog, setShowCommentDialog] = useState(false);
 
   const handleAddCommentClick = () => {
@@ -16,19 +10,11 @@ const Toolbar = ({
 
   return (
     <div className='toolbar bg-white rounded border border-gray-200 shadow-md mx-4'>
-      <button onClick={onSave} className='px-3 py-2 border-r border-gray-200'>
-        Save
-      </button>
-      <button
-        onClick={onSaveAsDraft}
-        className='px-3 py-2 border-r border-gray-200'
-      >
+      <button className='px-3 py-2 border-r border-gray-200'>Save</button>
+      <button className='px-3 py-2 border-r border-gray-200'>
         Save as Draft
       </button>
-      <button
-        onClick={onPreviewToggle}
-        className='px-3 py-2 border-r border-gray-200'
-      >
+      <button className='px-3 py-2 border-r border-gray-200'>
         Toggle Preview
       </button>
       <button

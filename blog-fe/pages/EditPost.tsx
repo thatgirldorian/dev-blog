@@ -217,54 +217,6 @@ const EditPost = ({ postId, postData }) => {
     };
   }, [handleHighlight]);
 
-  //   useEffect(() => {
-  //     // Function to handle text selection & determine which text is selected
-  //     const handleTextSelection = () => {
-  //       const selection = window.getSelection();
-  //       if (selection && selection.toString()) {
-  //         const ranges = [];
-  //         for (let i = 0; i < selection.rangeCount; i++) {
-  //           const range = selection.getRangeAt(i);
-
-  //           const startOffset = range.startOffset;
-  //           const endOffset = range.endOffset;
-
-  //           // Add the current range to the list of ranges
-  //           ranges.push({ start: startOffset, end: endOffset });
-  //         }
-
-  //         // Set the highlightedText state with the array of ranges
-  //         setHighlightedText(ranges);
-
-  //         // Get the coordinates of the mouse when the text is selected
-  //         const range = selection.getRangeAt(0);
-  //         const rect = range.getBoundingClientRect();
-  //         const mouseX = rect.left + rect.width / 2;
-  //         const mouseY = rect.top;
-
-  //         calculateToolbarPosition(mouseX, mouseY);
-
-  //         if (!isToolbarOpen) {
-  //           // Open the toolbar when text is highlighted and CommentModal is not open
-  //           setIsToolbarOpen(true);
-  //         }
-  //       } else {
-  //         // If nothing is selected, reset the highlightedText state and close toolbar
-  //         setHighlightedText([]);
-  //         setIsToolbarOpen(false);
-  //       }
-  //     };
-  //     // Add event listeners for mouseup and mousedown events
-  //     contentRef.current?.addEventListener('mouseup', handleTextSelection);
-  //     contentRef.current?.addEventListener('mousedown', handleTextSelection);
-
-  //     // Clean up the event listeners when the component unmounts
-  //     return () => {
-  //       contentRef.current?.removeEventListener('mouseup', handleTextSelection);
-  //       contentRef.current?.removeEventListener('mousedown', handleTextSelection);
-  //     };
-  //   }, [handleHighlight]);
-
   return (
     <div className='max-w-xl mx-12 mt-12'>
       <button onClick={handleRedirect}>Home</button>
