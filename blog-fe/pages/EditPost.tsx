@@ -1,17 +1,20 @@
 // EditPost.js (Edit component for editing a blog post)
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { fetchBlogPostById, updateBlogPost } from '../pages/api/posts';
 import { BlogContext } from './contexts/BlogContext';
+
+const Highlight = require('react-highlighter');
 
 const EditPost = ({ postId, postData }) => {
   const router = useRouter();
 
   const { blogData, setBlogData } = useContext(BlogContext);
-
   const [post, setPost] = useState(postData);
-
   const [previewMode, setPreviewMode] = useState(false);
+  const [highlightedText, setHighlightedText] = useState([]);
+
+  const contentRef = useRef();
 
   useEffect(() => {
     // Fetch the blog post data by its ID when the component mounts
@@ -105,6 +108,36 @@ const EditPost = ({ postId, postData }) => {
     setPreviewMode((prevPreviewMode) => !prevPreviewMode);
   };
 
+  const handleHighlight = (start, end) => {
+    setHighlightedText([...highlightedText, { start, end }]);
+  };
+
+  useEffect(() => {
+    // Function to handle text selection
+    const handleTextSelection = () => {
+      const selection = window.getSelection();
+      if (selection && selection.toString()) {
+        // Get the start and end positions of the selected text
+        const range = selection.getRangeAt(0);
+        const start = range.startOffset;
+        const end = range.endOffset;
+
+        // Call the handleHighlight function with start and end positions
+        handleHighlight(start, end);
+      }
+    };
+
+    // Add event listeners for mouseup and mousedown events
+    contentRef.current?.addEventListener('mouseup', handleTextSelection);
+    contentRef.current?.addEventListener('mousedown', handleTextSelection);
+
+    // Clean up the event listeners when the component unmounts
+    return () => {
+      contentRef.current?.removeEventListener('mouseup', handleTextSelection);
+      contentRef.current?.removeEventListener('mousedown', handleTextSelection);
+    };
+  }, [handleHighlight]);
+
   return (
     <div className='max-w-xl mx-12 mt-12'>
       <button onClick={handleRedirect}>Home</button>
@@ -129,9 +162,17 @@ const EditPost = ({ postId, postData }) => {
           <p className='text-[18px] text-gray-600 font-medium my-2'>
             {post.author}
           </p>
-          <p className=' my-4'>{post.content}</p>
-
-          {/* Add any other details you want to show in the preview */}
+          <p className=' my-4' ref={contentRef}>
+            <Highlight
+              search={highlightedText
+                .map((segment) =>
+                  post.content.slice(segment.start, segment.end)
+                )
+                .join(' ')}
+            >
+              {post.content}
+            </Highlight>
+          </p>
         </div>
       ) : (
         <div>
