@@ -4,7 +4,8 @@ import { useRouter } from 'next/router';
 import { fetchBlogPostById, updateBlogPost } from '../pages/api/posts';
 import { BlogContext } from './contexts/BlogContext';
 const Highlight = require('react-highlighter');
-import CommentModal from './CommentModal';
+
+import Toolbar from './Toolbar';
 
 const EditPost = ({ postId, postData }) => {
   const router = useRouter();
@@ -15,6 +16,9 @@ const EditPost = ({ postId, postData }) => {
   const [highlightedText, setHighlightedText] = useState([]);
   const [isInitialModalOpen, setIsInitialModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [isToolbarOpen, setIsToolbarOpen] = useState(false);
+  const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
 
   const [selectedText, setSelectedText] = useState('');
 
@@ -112,7 +116,21 @@ const EditPost = ({ postId, postData }) => {
     setPreviewMode((prevPreviewMode) => !prevPreviewMode);
   };
 
+  const handleCloseToolbars = () => {
+    setIsToolbarOpen(false);
+    // other logic
+  };
+
+  const calculateToolbarPosition = () => {
+    // Logic to calculate position goes here
+    const position = { top: 100, left: 100 }; // replace with actual calculation
+    setToolbarPosition(position);
+  };
+
   const handleHighlight = (start, end) => {
+    setIsToolbarOpen(true);
+    calculateToolbarPosition();
+
     setHighlightedText([...highlightedText, { start, end }]);
     setIsInitialModalOpen(true);
   };
@@ -159,15 +177,14 @@ const EditPost = ({ postId, postData }) => {
         // Set the highlightedText state with the array of ranges
         setHighlightedText(ranges);
 
-        if (!isModalOpen) {
+        if (!isToolbarOpen) {
           // Open the initial modal when text is highlighted and CommentModal is not open
-          setIsInitialModalOpen(true);
+          setIsToolbarOpen(true);
         }
       } else {
         // If nothing is selected, reset the highlightedText state and close both modals
         setHighlightedText([]);
-        setIsModalOpen(false);
-        setIsInitialModalOpen(false);
+        setIsToolbarOpen(false);
       }
     };
     // Add event listeners for mouseup and mousedown events
@@ -178,17 +195,6 @@ const EditPost = ({ postId, postData }) => {
     return () => {
       contentRef.current?.removeEventListener('mouseup', handleTextSelection);
       contentRef.current?.removeEventListener('mousedown', handleTextSelection);
-    };
-
-    // Add event listener for mouseup event on the window
-    window.addEventListener('mouseup', handleTextSelection);
-    // Add event listener for click event on the window to handle closing the initial modal
-    window.addEventListener('click', handleInitialModalOutsideClick);
-
-    // Clean up the event listeners when the component unmounts
-    return () => {
-      window.removeEventListener('mouseup', handleTextSelection);
-      window.removeEventListener('click', handleInitialModalOutsideClick);
     };
   }, [handleHighlight]);
 
@@ -288,29 +294,22 @@ const EditPost = ({ postId, postData }) => {
         </div>
       )}
 
-      {isInitialModalOpen && !isModalOpen && (
-        <div className='fixed top-0 left-0 w-screen h-screen bg-opacity-60 bg-gray-900 flex justify-center items-center'>
-          {/* ... (Initial modal content) */}
-          <button
-            className='initial-modal-content bg-blue-500 text-white px-4 py-2 rounded mt-4'
-            onClick={handleInitialModalClick}
-          >
-            Add Comment
-          </button>
-          {/* ... (Other buttons and content) */}
-        </div>
-      )}
-
-      {isModalOpen && (
-        // Render the AddCommentModal
-        <CommentModal
-          isOpen={isModalOpen}
-          onClose={handleCloseModals} // Close both modals when clicking "Cancel"
-          onSubmit={handleAddComment}
-          highlightedText={highlightedText}
-          handleHighlight={handleHighlight}
-        />
-      )}
+      <div style={{ position: 'relative' }}>
+        {isToolbarOpen && (
+          <Toolbar
+            isOpen={isToolbarOpen}
+            onClose={handleCloseToolbars} // Close the toolbar when clicking "Cancel"
+            onSubmit={handleAddComment} // Handle adding comments in the Toolbar
+            highlightedText={highlightedText}
+            handleHighlight={handleHighlight}
+            style={{
+              position: 'absolute',
+              top: toolbarPosition.top,
+              left: toolbarPosition.left,
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 };

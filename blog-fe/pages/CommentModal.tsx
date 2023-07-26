@@ -1,10 +1,12 @@
 import React from 'react';
-import { useState } from 'react';
 
 const CommentModal = ({ isOpen, onClose, onSubmit, selectedText }) => {
-  const [isInitialModalOpen, setIsInitialModalOpen] = useState(false);
-  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+  const [isCommentModalOpen, setIsCommentModalOpen] = React.useState(false);
   const [comment, setComment] = React.useState('');
+  const [modalPosition, setModalPosition] = React.useState({
+    top: '0px',
+    left: '0px',
+  });
 
   // Clear the comment input and close both modals
   const handleCloseModals = () => {
@@ -20,33 +22,53 @@ const CommentModal = ({ isOpen, onClose, onSubmit, selectedText }) => {
   };
 
   React.useEffect(() => {
-    // Open the second modal if "Add Comment" is clicked in the initial modal
     if (isOpen) {
+      // Calculate the position of the highlighted text
+      const selection = window.getSelection();
+      if (!selection) return;
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      setModalPosition({
+        top: `${rect.top + window.scrollY}px`,
+        left: `${rect.left + window.scrollX}px`,
+      });
       setIsCommentModalOpen(true);
     }
   }, [isOpen]);
 
   return (
     <>
-      // Render the initial modal (Modal 1)
-      {isOpen && (
-        <div className='fixed top-0 left-0 w-screen h-screen bg-opacity-60 bg-gray-900 flex justify-center items-center'>
-          {/* ... (Initial modal content) */}
-          <button
-            className='bg-blue-500 text-white px-4 py-2 rounded mt-4'
-            onClick={() => setIsCommentModalOpen(true)}
-          >
-            Add Comment
-          </button>
-          {/* ... (Other buttons and content) */}
+      {/* Initial modal */}
+      {isOpen && !isCommentModalOpen && (
+        <div
+          className='fixed z-10 flex items-center justify-center'
+          style={{ top: modalPosition.top, left: modalPosition.left }}
+        >
+          <div className='bg-white p-2 rounded flex items-center shadow-lg'>
+            <button
+              className='bg-blue-500 text-white px-2 py-1 rounded'
+              onClick={() => setIsCommentModalOpen(true)}
+            >
+              <i className='fas fa-comment-dots'></i>{' '}
+              {/* Use any comment icon here */}
+            </button>
+            <button
+              className='bg-gray-500 text-white px-2 py-1 rounded ml-2'
+              onClick={onClose}
+            >
+              <i className='fas fa-times'></i>{' '}
+              {/* Use any cancel/close icon here */}
+            </button>
+          </div>
         </div>
       )}
-      // Render the second modal (Modal 2)
+
+      {/* Second modal */}
       {isCommentModalOpen && (
         <div className='fixed top-0 right-0 w-1/3 h-screen bg-white p-6'>
-          {/* ... (Second modal content) */}
+          <p className='text-xl font-bold mb-2'>Add Comment</p>
           <textarea
-            className='w-full h-48 border rounded p-2 mb-4'
+            className='w-50% h-48 border rounded p-2 mb-4'
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder='Enter your comment here...'
