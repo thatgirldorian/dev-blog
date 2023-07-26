@@ -3,10 +3,12 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const postsRoute = require('./posts');
+const commentsRoute = require('./comments');
 const cors = require('cors');
 
-// Import Mongoose model
+// Import Mongoose models
 const Post = require('./models/postModel');
+const Comment = require('./models/commentModel');
 
 const app = express();
 // Enable CORS
@@ -24,6 +26,7 @@ app.use(express.json());
 
 // Register API routes
 app.use('/api', postsRoute);
+app.use('/api', commentsRoute);
 
 // Make sure you have the correct route for fetching a single post by ID
 app.get('/api/posts/:id', async (req, res) => {
