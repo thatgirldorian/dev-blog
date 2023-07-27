@@ -116,7 +116,6 @@ const EditPost = ({ postId, postData }) => {
 
   const handleCloseToolbars = () => {
     setIsToolbarOpen(false);
-    // other logic
   };
 
   const handleHighlight = (start, end, comment) => {
@@ -144,6 +143,9 @@ const EditPost = ({ postId, postData }) => {
       });
       return updatedHighlightedText;
     });
+
+    // Close the toolbar after a comment has been added
+    setIsToolbarOpen(false);
   };
 
   const handleTextSelection = () => {
@@ -337,7 +339,7 @@ const EditPost = ({ postId, postData }) => {
           <Toolbar
             postId={postId}
             isOpen={isToolbarOpen}
-            onClose={handleCloseToolbars} // Close the toolbar when clicking "Cancel"
+            // onClose={handleCloseToolbars} // Close the toolbar when clicking "Cancel"
             onSubmit={handleAddComment} // Handle adding comments in the Toolbar
             highlightedText={highlightedText}
             handleHighlight={handleHighlight}

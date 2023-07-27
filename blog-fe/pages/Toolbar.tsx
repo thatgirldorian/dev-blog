@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
 import CommentDialog from './CommentDialog';
 
-const Toolbar = ({ postId }) => {
+const Toolbar = ({ postId, onSubmit, onClose }) => {
   const [showCommentDialog, setShowCommentDialog] = useState(false);
+  const [comment, setComment] = useState('');
+
+  const handleSubmit = () => {
+    // Call the onSubmit callback prop with the comment as an argument
+    onSubmit(comment);
+
+    // Clear the comment input after submission
+    setComment('');
+
+    //close the toolbar afterwards
+    setShowCommentDialog(false);
+  };
 
   const handleAddCommentClick = () => {
     setShowCommentDialog(true);
@@ -26,7 +38,7 @@ const Toolbar = ({ postId }) => {
       {showCommentDialog && (
         <CommentDialog
           postId={postId}
-          onSubmit={handleAddCommentClick}
+          onSubmit={handleSubmit}
           onClose={() => setShowCommentDialog(false)}
         />
       )}

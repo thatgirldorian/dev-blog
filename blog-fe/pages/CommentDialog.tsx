@@ -25,6 +25,9 @@ const CommentDialog = ({ onClose, postId }) => {
 
       // Reset the commentContent state after submission
       setCommentContent('');
+
+      // Close the dialog after the comment is successfully submitted
+      onClose();
     } catch (error) {
       console.error('Error adding comment:', error);
       // Handle the error, e.g., show an error message
