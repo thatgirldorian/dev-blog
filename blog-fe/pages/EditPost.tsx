@@ -6,6 +6,7 @@ import { BlogContext } from './contexts/BlogContext';
 const Highlight = require('react-highlighter');
 
 import Toolbar from './Toolbar';
+import CommentSidebar from './CommentSidebar';
 
 const EditPost = ({ postId, postData }) => {
   const router = useRouter();
