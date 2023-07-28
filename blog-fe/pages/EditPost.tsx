@@ -7,6 +7,7 @@ const Highlight = require('react-highlighter');
 
 import Toolbar from './Toolbar';
 import CommentSidebar from './CommentSidebar';
+import axios from 'axios';
 
 const EditPost = ({ postId, postData }) => {
   const router = useRouter();
@@ -21,6 +22,8 @@ const EditPost = ({ postId, postData }) => {
 
   const [selectedText, setSelectedText] = useState('');
 
+  const [comments, setComments] = useState([]);
+
   const contentRef = useRef();
 
   useEffect(() => {
@@ -32,9 +35,25 @@ const EditPost = ({ postId, postData }) => {
         content: postData.content,
         author: postData.author,
         draft: postData.draft,
+        comments: postData.comments || [],
       });
     }
     fetchPost();
+  }, [postId]);
+
+  useEffect(() => {
+    // Fetch the comments for the post by its ID when the component mounts
+    async function fetchComments() {
+      try {
+        const response = await axios.get(
+          `http://localhost:5001/api/posts/${postId}/comments`
+        );
+        setComments(response.data);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
+    }
+    fetchComments();
   }, [postId]);
 
   const handleContentChange = (event) => {
@@ -334,6 +353,13 @@ const EditPost = ({ postId, postData }) => {
           </button>
         </div>
       )}
+
+      {/* Add a container to hold the comment sidebars */}
+      <div className='comment-sidebar-container'>
+        {comments.map((comment) => (
+          <CommentSidebar key={comment._id} comment={comment} />
+        ))}
+      </div>
 
       <div style={{ position: 'relative' }}>
         {isToolbarOpen && (
