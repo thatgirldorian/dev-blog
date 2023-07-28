@@ -1,5 +1,5 @@
 // EditPost.js (Edit component for editing a blog post)
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useContext, useRef, useReducer } from 'react';
 import { useRouter } from 'next/router';
 import { fetchBlogPostById, updateBlogPost } from '../pages/api/posts';
 import { BlogContext } from './contexts/BlogContext';
@@ -8,9 +8,12 @@ const Highlight = require('react-highlighter');
 import Toolbar from './Toolbar';
 import CommentSidebar from './CommentSidebar';
 import axios from 'axios';
+import commentsReducer from '../reducers/commentsReducer';
 
 const EditPost = ({ postId, postData }) => {
   const router = useRouter();
+
+  const [comments, dispatch] = useReducer(commentsReducer, []);
 
   const { blogData, setBlogData } = useContext(BlogContext);
   const [post, setPost] = useState(postData);
@@ -21,8 +24,6 @@ const EditPost = ({ postId, postData }) => {
   const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
 
   const [selectedText, setSelectedText] = useState('');
-
-  const [comments, setComments] = useState([]);
 
   const contentRef = useRef();
 
@@ -48,13 +49,16 @@ const EditPost = ({ postId, postData }) => {
         const response = await axios.get(
           `http://localhost:5001/api/posts/${postId}/comments`
         );
-        setComments(response.data);
+        dispatch({
+          type: 'SET_COMMENTS',
+          payload: response.data,
+        });
       } catch (error) {
         console.error('Error fetching comments:', error);
       }
     }
     fetchComments();
-  }, [postId]);
+  }, [postId, comments]);
 
   const handleContentChange = (event) => {
     const contentValue = event.target.value;
@@ -146,26 +150,43 @@ const EditPost = ({ postId, postData }) => {
     ]);
   };
 
-  const handleAddComment = (comment) => {
+  const handleAddComment = async (comment) => {
     // Handle the comment submission here (e.g., save it to the server)
     console.log('Adding comment:', comment);
 
-    setHighlightedText((prevHighlightedText) => {
-      const updatedHighlightedText = prevHighlightedText.map((segment) => {
-        if (
-          segment.start === selectedText.start &&
-          segment.end === selectedText.end
-        ) {
-          // If the segment matches the selected text, update its comments
-          return { ...segment, comments: [...segment.comments, comment] };
-        }
-        return segment;
-      });
-      return updatedHighlightedText;
-    });
+    try {
+      // Save the comment to the server
+      const response = await axios.post(
+        `http://localhost:5001/api/posts/${postId}/comments`,
+        comment
+      );
 
-    // Close the toolbar after a comment has been added
-    setIsToolbarOpen(false);
+      // Get the newly added comment from the server response
+      const newComment = response.data;
+
+      // Update the comments state with the new comment
+      dispatch({ type: 'ADD_COMMENT', comment: newComment });
+
+      setHighlightedText((prevHighlightedText) => {
+        const updatedHighlightedText = prevHighlightedText.map((segment) => {
+          if (
+            segment.start === selectedText.start &&
+            segment.end === selectedText.end
+          ) {
+            // If the segment matches the selected text, update its comments
+            return { ...segment, comments: [...segment.comments, newComment] };
+          }
+          return segment;
+        });
+        return updatedHighlightedText;
+      });
+
+      // Close the toolbar after a comment has been added
+      setIsToolbarOpen(false);
+    } catch (error) {
+      // Handle error, e.g., show an error message
+      console.error('Error adding comment:', error);
+    }
   };
 
   const handleTextSelection = () => {
