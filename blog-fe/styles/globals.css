@@ -32,3 +32,35 @@
 .toolbar button:not(:last-child) {
   border-right: 1px solid #e2e8f0; /* Grey 200 divider after each toolbar item */
 }
+
+/* Add this CSS to your existing styles or create a new CSS file */
+.comment-sidebar {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 300px;
+  padding: 16px;
+  background: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.comment {
+  margin-bottom: 16px;
+}
+
+.comment-author {
+  font-weight: bold;
+}
+
+.comment-time {
+  color: #666;
+  font-size: 12px;
+}
+
+.comment-content {
+  margin-top: 8px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
