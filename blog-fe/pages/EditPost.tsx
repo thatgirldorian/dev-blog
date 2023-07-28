@@ -354,12 +354,14 @@ const EditPost = ({ postId, postData }) => {
         </div>
       )}
 
-      {/* Add a container to hold the comment sidebars */}
-      <div className='comment-sidebar-container'>
-        {comments.map((comment) => (
-          <CommentSidebar key={comment._id} comment={comment} />
-        ))}
-      </div>
+      {/* Conditionally render the comment sidebars only in preview mode */}
+      {previewMode && (
+        <div className='comment-sidebar-container'>
+          {comments.map((comment) => (
+            <CommentSidebar key={comment._id} comment={comment} />
+          ))}
+        </div>
+      )}
 
       <div style={{ position: 'relative' }}>
         {isToolbarOpen && (
