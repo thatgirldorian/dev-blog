@@ -34,25 +34,20 @@
 }
 
 /* Add this CSS to your existing styles or create a new CSS file */
-.comment-sidebar {
-  position: fixed;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-  width: 300px;
-  background-color: #f8f8f8;
-  padding: 16px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  margin-bottom: 4px;
-}
-
 .comment-sidebar-container {
   position: fixed;
   top: 50%;
   right: 20px;
   transform: translateY(-50%);
   max-width: 300px;
+}
+
+.comment-sidebar {
+  background-color: #f8f8f8;
+  padding: 8px;
+  margin-bottom: 12px; /* Add margin between each comment sidebar */
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .comment-sidebar {

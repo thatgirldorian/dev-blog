@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export async function fetchBlogPosts() {
   try {
     const response = await fetch('http://localhost:5001/api/posts');
@@ -32,3 +34,17 @@ export async function updateBlogPost(postId, postData) {
     throw error;
   }
 }
+
+// This function fetches comments for a specific post by its postId
+export const fetchCommentsByPostId = async (postId) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:5001/api/posts/${postId}/comments`
+    );
+    return response.data;
+    console.log(data); // Assuming the API returns an array of comments
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    throw error;
+  }
+};
