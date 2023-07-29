@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const CommentDialog = ({ onClose, postId }) => {
   const [commentContent, setCommentContent] = useState('');
+  const [authorName, setAuthorName] = useState('');
 
   const handleCommentSubmit = async () => {
     try {
@@ -10,7 +11,7 @@ const CommentDialog = ({ onClose, postId }) => {
       const commentData = {
         postId: postId,
         content: commentContent,
-        author: 'User', // You may want to set the actual author here
+        author: authorName, // You may want to set the actual author here
         date: new Date().toISOString(),
       };
 
@@ -23,8 +24,9 @@ const CommentDialog = ({ onClose, postId }) => {
       // Handle the response, e.g., show a success message or refresh the comments
       console.log('Comment added:', response.data);
 
-      // Reset the commentContent state after submission
+      // Reset the commentContent & authorName state after submission
       setCommentContent('');
+      setAuthorName('');
 
       // Close the dialog after the comment is successfully submitted
       onClose();
@@ -54,6 +56,15 @@ const CommentDialog = ({ onClose, postId }) => {
         value={commentContent}
         onChange={(e) => setCommentContent(e.target.value)}
       ></textarea>
+
+      {/* Add your comment input field and submit button here */}
+      <input
+        type='text'
+        placeholder='Your Name'
+        value={authorName}
+        onChange={(e) => setAuthorName(e.target.value)}
+      />
+
       <button onClick={handleCommentSubmit}>Submit</button>
       <button onClick={onClose}>Cancel</button>
     </div>

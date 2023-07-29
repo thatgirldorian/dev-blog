@@ -190,46 +190,44 @@ const EditPost = ({ postId, postData }) => {
   };
 
   const handleTextSelection = () => {
-    if (!isToolbarOpen) {
-      const selection = window.getSelection();
-      if (selection && selection.toString()) {
-        const ranges = [];
-        for (let i = 0; i < selection.rangeCount; i++) {
-          const range = selection.getRangeAt(i);
+    const selection = window.getSelection();
+    if (selection && selection.toString()) {
+      const ranges = [];
+      for (let i = 0; i < selection.rangeCount; i++) {
+        const range = selection.getRangeAt(i);
 
-          const startOffset = range.startOffset;
-          const endOffset = range.endOffset;
+        const startOffset = range.startOffset;
+        const endOffset = range.endOffset;
 
-          // Add the current range to the list of ranges
-          ranges.push({ start: startOffset, end: endOffset });
-        }
-
-        // Set the highlightedText state with the array of ranges
-        setHighlightedText(ranges);
-
-        // Get the coordinates of the mouse when the text is selected
-        const range = selection.getRangeAt(0);
-        const rect = range.getBoundingClientRect();
-        const mouseX = rect.left + rect.width / 2;
-        const mouseY = rect.top;
-
-        if (!isToolbarOpen) {
-          // Open the toolbar when text is highlighted and CommentModal is not open
-          setIsToolbarOpen(true);
-        }
-
-        // Set the toolbar position after the state is updated
-        setToolbarPosition({
-          top: mouseY - contentRef.current.offsetTop - 40, // Adjust this value to position the toolbar above the selected text
-          left: mouseX - contentRef.current.offsetLeft, // Position the toolbar relative to the left of the content container
-        });
-
-        calculateToolbarPosition(mouseX, mouseY);
-      } else {
-        // If nothing is selected, reset the highlightedText state and close the toolbar
-        setHighlightedText([]);
-        setIsToolbarOpen(false);
+        // Add the current range to the list of ranges
+        ranges.push({ start: startOffset, end: endOffset });
       }
+
+      // Set the highlightedText state with the array of ranges
+      setHighlightedText(ranges);
+
+      // Get the coordinates of the mouse when the text is selected
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      const mouseX = rect.left + rect.width / 2;
+      const mouseY = rect.top;
+
+      if (!isToolbarOpen) {
+        // Open the toolbar when text is highlighted and CommentModal is not open
+        setIsToolbarOpen(true);
+      }
+
+      // Set the toolbar position after the state is updated
+      setToolbarPosition({
+        top: mouseY - contentRef.current.offsetTop - 40, // Adjust this value to position the toolbar above the selected text
+        left: mouseX - contentRef.current.offsetLeft, // Position the toolbar relative to the left of the content container
+      });
+
+      calculateToolbarPosition(mouseX, mouseY);
+    } else {
+      // If nothing is selected, reset the highlightedText state and close the toolbar
+      setHighlightedText([]);
+      setIsToolbarOpen(false);
     }
   };
 
