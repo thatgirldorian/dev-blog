@@ -24,6 +24,9 @@ const EditPost = ({ postId, postData }) => {
   const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
 
   const [selectedText, setSelectedText] = useState('');
+  const [highlightedComment, setHighlightedComment] = useState(null);
+  const [start, setStart] = useState();
+  const [end, setEnd] = useState();
 
   const contentRef = useRef();
 
@@ -71,6 +74,56 @@ const EditPost = ({ postId, postData }) => {
       setPost({ ...post, [name]: checked });
     } else {
       setPost({ ...post, [name]: value });
+    }
+  };
+
+  const highlightText = (start, end) => {
+    // Get references to the content element and its text nodes using useRef
+    const contentEl = contentRef.current;
+
+    if (!contentEl) {
+      // Handle error case if content element not found
+      console.error('Content element not found');
+      return;
+    }
+
+    // Get the actual text content from the content element
+    const contentText = contentEl.textContent;
+
+    // Highlight the selection
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.setStart(contentEl.firstChild, start);
+    range.setEnd(contentEl.firstChild, end);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  };
+
+  // Helper to get text nodes
+  const getTextNodesIn = (el) => {
+    if (!el) {
+      return [];
+    }
+
+    let n,
+      a = [];
+    walk(el);
+    return a;
+
+    function walk(el) {
+      for (n = el.firstChild; n; n = n.nextSibling) {
+        if (n.nodeType === 3) {
+          // text node
+          a.push({
+            node: n,
+            start: n.textContent.slice(0, n.textContent.length),
+            end: n.textContent.slice(0, n.textContent.length),
+          });
+        } else if (n.nodeType === 1) {
+          // element node
+          walk(n);
+        }
+      }
     }
   };
 
@@ -142,14 +195,6 @@ const EditPost = ({ postId, postData }) => {
     setIsToolbarOpen(false);
   };
 
-  const handleHighlight = (start, end, comment) => {
-    setIsToolbarOpen(true);
-    setHighlightedText((prevHighlightedText) => [
-      ...prevHighlightedText,
-      { start, end, comments: [comment] },
-    ]);
-  };
-
   const handleAddComment = async (comment) => {
     // Handle the comment submission here (e.g., save it to the server)
     console.log('Adding comment:', comment);
@@ -158,7 +203,9 @@ const EditPost = ({ postId, postData }) => {
       // Save the comment to the server
       const response = await axios.post(
         `http://localhost:5001/api/posts/${postId}/comments`,
-        comment
+        comment,
+        start,
+        end
       );
 
       // Get the newly added comment from the server response
@@ -192,22 +239,18 @@ const EditPost = ({ postId, postData }) => {
   const handleTextSelection = () => {
     const selection = window.getSelection();
     if (selection && selection.toString()) {
-      const ranges = [];
-      for (let i = 0; i < selection.rangeCount; i++) {
-        const range = selection.getRangeAt(i);
+      const range = selection.getRangeAt(0);
+      const start = range.startOffset;
+      const end = range.endOffset;
 
-        const startOffset = range.startOffset;
-        const endOffset = range.endOffset;
+      // Set the highlightedText state with the array of a single range
+      setHighlightedText([{ start, end }]);
 
-        // Add the current range to the list of ranges
-        ranges.push({ start: startOffset, end: endOffset });
-      }
-
-      // Set the highlightedText state with the array of ranges
-      setHighlightedText(ranges);
+      // Set the start and end state with the first range in the selection
+      setStart(start);
+      setEnd(end);
 
       // Get the coordinates of the mouse when the text is selected
-      const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
       const mouseX = rect.left + rect.width / 2;
       const mouseY = rect.top;
@@ -228,6 +271,38 @@ const EditPost = ({ postId, postData }) => {
       // If nothing is selected, reset the highlightedText state and close the toolbar
       setHighlightedText([]);
       setIsToolbarOpen(false);
+    }
+  };
+
+  const handleCommentSidebarClick = async (comment, start, end) => {
+    console.log('Clicked on comment:', comment);
+    highlightText(start, end);
+    // Highlight the corresponding text based on the clicked comment
+    setHighlightedComment(comment);
+
+    setStart(start);
+    setEnd(end);
+
+    try {
+      // Fetch the comments for the highlighted section
+      const response = await axios.get(
+        `http://localhost:5001/api/posts/${postId}/highlight/${start}/${end}`
+      );
+
+      const highlightedComments = response.data;
+      // Set the highlighted comments state to update the UI
+      setHighlightedText((prevHighlightedText) => {
+        const updatedHighlightedText = prevHighlightedText.map((segment) => {
+          if (segment.start === comment.start && segment.end === comment.end) {
+            // If the segment matches the selected text, update its comments
+            return { ...segment, comments: highlightedComments };
+          }
+          return segment;
+        });
+        return updatedHighlightedText;
+      });
+    } catch (error) {
+      console.error('Error fetching highlighted comments:', error);
     }
   };
 
@@ -268,14 +343,12 @@ const EditPost = ({ postId, postData }) => {
   useEffect(() => {
     // Add event listeners for mouseup and mousedown events
     contentRef.current?.addEventListener('mouseup', handleTextSelection);
-    contentRef.current?.addEventListener('mousedown', handleTextSelection);
 
     // Clean up the event listeners when the component unmounts
     return () => {
       contentRef.current?.removeEventListener('mouseup', handleTextSelection);
-      contentRef.current?.removeEventListener('mousedown', handleTextSelection);
     };
-  }, [handleHighlight]);
+  }, [highlightText]);
 
   return (
     <div className='max-w-xl mx-12 mt-12'>
@@ -303,6 +376,7 @@ const EditPost = ({ postId, postData }) => {
           </p>
           <p className='my-4' ref={contentRef}>
             <Highlight
+              matchStyle={{ backgroundColor: 'pink' }}
               search={highlightedText
                 .map((segment) =>
                   post.content.slice(segment.start, segment.end)
@@ -377,7 +451,14 @@ const EditPost = ({ postId, postData }) => {
       {previewMode && (
         <div className='comment-sidebar-container'>
           {comments.map((comment) => (
-            <CommentSidebar key={comment._id} comment={comment} />
+            <CommentSidebar
+              key={comment._id}
+              comment={comment}
+              onClick={handleCommentSidebarClick}
+              isSelected={highlightedComment === comment}
+              start={comment.start}
+              end={comment.end}
+            />
           ))}
         </div>
       )}
@@ -390,7 +471,7 @@ const EditPost = ({ postId, postData }) => {
             // onClose={handleCloseToolbars} // Close the toolbar when clicking "Cancel"
             onSubmit={handleAddComment} // Handle adding comments in the Toolbar
             highlightedText={highlightedText}
-            handleHighlight={handleHighlight}
+            highlightText={highlightText}
             style={{
               position: 'absolute',
               top: toolbarPosition.top,

@@ -73,3 +73,12 @@
   font-size: 14px;
   line-height: 1.5;
 }
+
+.comment-sidebar.selected {
+  background-color: yellow;
+  font-weight: 400;
+}
+
+.highlighted-text {
+  background-color: blue;
+}
