@@ -1,4 +1,3 @@
-// blog-server/postModel.js
 const req = require('express/lib/request');
 const mongoose = require('mongoose');
 const Comment = require('./commentModel');
@@ -12,6 +11,13 @@ const postSchema = new mongoose.Schema({
   draft: { type: Boolean, required: false },
   updatedAt: { type: Date, default: Date.now },
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
+  highlightedText: [
+    {
+      start: { type: Number, required: true },
+      end: { type: Number, required: true },
+      comments: { type: mongoose.Schema.Types.ObjectId, ref: 'Comment' },
+    },
+  ],
 });
 
 const Post = mongoose.model('Post', postSchema);
