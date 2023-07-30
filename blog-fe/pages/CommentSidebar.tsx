@@ -2,10 +2,18 @@ import React from 'react';
 import TimeAgo from 'timeago-react';
 
 const CommentSidebar = ({ comment, onClick, isSelected, start, end }) => {
+  const handleCommentClick = (event) => {
+    // Prevent the event from propagating to the parent elements
+    event.stopPropagation();
+
+    // Handle the click event on the comment
+    onClick(comment, start, end);
+  };
+
   return (
     <div
       className={`comment-sidebar ${isSelected ? 'selected' : ''}`}
-      onClick={() => onClick(comment, start, end)}
+      onClick={handleCommentClick}
     >
       <p className='comment-author'>{comment.author}</p>
       <p className='comment-time'>

@@ -63,68 +63,49 @@ const EditPost = ({ postId, postData }) => {
     fetchComments();
   }, [postId, comments]);
 
-  const highlightText = () => {
+  const highlightText = (start, end) => {
+    const contentEl = contentRef.current;
     const selection = window.getSelection();
-    if (selection && selection.toString()) {
-      const range = selection.getRangeAt(0);
-      const contentEl = contentRef.current;
-      const contentText = contentEl.textContent;
-      const start = getContentOffset(
-        contentText,
-        range.startContainer,
-        range.startOffset
-      );
-      const end = getContentOffset(
-        contentText,
-        range.endContainer,
-        range.endOffset
-      );
 
-      // Highlight the selection
-      selection.removeAllRanges();
-      selection.addRange(range);
+    if (contentEl && selection) {
+      const range = document.createRange();
+      const startNode = getNodeAtOffset(contentEl, start);
+      const endNode = getNodeAtOffset(contentEl, end);
 
-      // Save the start and end values to the component state
-      setStart(start);
-      setEnd(end);
-
-      // Open the toolbar when text is highlighted
-      setIsToolbarOpen(true);
-    } else {
-      // If nothing is selected, reset the highlightedText state and close the toolbar
-      setHighlightedText([]);
-      setIsToolbarOpen(false);
+      if (startNode && endNode) {
+        range.setStart(startNode.node, startNode.offset);
+        range.setEnd(endNode.node, endNode.offset);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
   };
 
-  // Helper to get the offset of a node within its parent text content
-  const getContentOffset = (textContent, node, offset) => {
-    let totalOffset = 0;
-    const tempElement = document.createElement('div'); // Create a temporary element
-    tempElement.innerHTML = textContent; // Set the temporary element's innerHTML to the content
+  const getNodeAtOffset = (rootNode, offset) => {
     const walker = document.createTreeWalker(
-      tempElement, // Use the temporary element as the root node for the tree walker
+      rootNode,
       NodeFilter.SHOW_TEXT,
       null,
       false
     );
+    let currentNode = walker.nextNode();
+    let currentOffset = 0;
 
-    while (walker.nextNode()) {
-      const currentNode = walker.currentNode;
+    while (currentNode) {
+      const nodeLength = currentNode.length;
 
-      if (currentNode === node) {
-        // Clean up the temporary element
-        tempElement.remove();
-        return totalOffset + offset;
-      } else {
-        totalOffset += currentNode.length;
+      if (currentOffset + nodeLength >= offset) {
+        return {
+          node: currentNode,
+          offset: offset - currentOffset,
+        };
       }
+
+      currentOffset += nodeLength;
+      currentNode = walker.nextNode();
     }
 
-    // Clean up the temporary element
-    tempElement.remove();
-
-    return totalOffset;
+    return null;
   };
 
   const handleTextSelection = () => {
