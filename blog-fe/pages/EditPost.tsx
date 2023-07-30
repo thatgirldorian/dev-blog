@@ -244,16 +244,21 @@ const EditPost = ({ postId, postData }) => {
     setIsToolbarOpen(false);
   };
 
-  const handleAddComment = async (comment, start, end) => {
+  const handleAddComment = async (commentContent, authorName, start, end) => {
+    const commentData = {
+      content: commentContent,
+      author: authorName,
+    };
+
     // Handle the comment submission here (e.g., save it to the server)
-    console.log('Adding comment:', comment);
+    console.log('Adding comment:', commentData, start, end);
 
     try {
       // Save the comment to the server
       const response = await axios.post(
         `http://localhost:5001/api/posts/${postId}/comments`,
         {
-          ...comment,
+          ...commentData,
           start: start,
           end: end,
         }

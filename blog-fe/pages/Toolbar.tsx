@@ -11,18 +11,22 @@ const Toolbar = ({
 }) => {
   const [showCommentDialog, setShowCommentDialog] = useState(false);
   const [comment, setComment] = useState('');
+  const [commentContent, setCommentContent] = useState(''); // State to store the comment content
+  const [authorName, setAuthorName] = useState(''); // State to store the author name
 
   const openDialog = () => {
     setShowCommentDialog(true);
   };
 
   const handleSubmit = () => {
+    // Call the handleAddComment function with the correct arguments
+    handleAddComment(commentContent, authorName, start, end);
     // Call the onSubmit callback prop with the comment as an argument
-    onSubmit(comment);
+    onSubmit(commentContent, authorName);
 
     // Clear the comment input after submission
-    setComment('');
-
+    setCommentContent('');
+    setAuthorName('');
     //close the toolbar afterwards
     setShowCommentDialog(false);
   };
@@ -41,7 +45,7 @@ const Toolbar = ({
         Toggle Preview
       </button>
       <button
-        onClick={() => handleAddComment(comment, start, end)} // Call the handleAddCommentClick function
+        onClick={() => handleAddCommentClick()} // Call the handleAddCommentClick function
         className='px-3 py-2 border-r border-gray-200'
       >
         Add Comment

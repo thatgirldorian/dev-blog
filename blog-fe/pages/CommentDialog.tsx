@@ -4,20 +4,22 @@ import axios from 'axios';
 const CommentDialog = ({ onClose, postId, onSubmit, start, end }) => {
   const [commentContent, setCommentContent] = useState('');
   const [authorName, setAuthorName] = useState('');
-  const [comment, setComment] = useState('');
-
-  const handleSubmit = () => {
-    onSubmit(comment, start, end);
-  };
 
   const handleCommentSubmit = async () => {
+    if (!commentContent || !authorName || !start || !end) {
+      console.error('Comment data is incomplete');
+      return;
+    }
+
     try {
       // Prepare the comment data to send in the request
       const commentData = {
         postId: postId,
         content: commentContent,
-        author: authorName, // You may want to set the actual author here
+        author: authorName,
         date: new Date().toISOString(),
+        start: start,
+        end: end,
       };
 
       // Send the HTTP POST request to the backend API
@@ -70,7 +72,7 @@ const CommentDialog = ({ onClose, postId, onSubmit, start, end }) => {
         onChange={(e) => setAuthorName(e.target.value)}
       />
 
-      <button onClick={handleSubmit}>Submit</button>
+      <button onClick={handleCommentSubmit}>Submit</button>
       <button onClick={onClose}>Cancel</button>
     </div>
   );
