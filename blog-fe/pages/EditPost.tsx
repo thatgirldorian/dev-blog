@@ -503,7 +503,7 @@ const EditPost = ({ postId, postData }) => {
             postId={postId}
             handleAddComment={handleAddComment}
             start={start}
-            end={start}
+            end={end}
             isOpen={isToolbarOpen}
             onSubmit={handleAddComment} // Handle adding comments in the Toolbar
             highlightedText={highlightedText}
