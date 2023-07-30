@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import CommentDialog from './CommentDialog';
 
-const Toolbar = ({ postId, onSubmit, onClose }) => {
+const Toolbar = ({
+  postId,
+  onSubmit,
+  onClose,
+  handleAddComment,
+  start,
+  end,
+}) => {
   const [showCommentDialog, setShowCommentDialog] = useState(false);
   const [comment, setComment] = useState('');
+
+  const openDialog = () => {
+    setShowCommentDialog(true);
+  };
 
   const handleSubmit = () => {
     // Call the onSubmit callback prop with the comment as an argument
@@ -30,7 +41,7 @@ const Toolbar = ({ postId, onSubmit, onClose }) => {
         Toggle Preview
       </button>
       <button
-        onClick={handleAddCommentClick} // Call the handleAddCommentClick function
+        onClick={() => handleAddComment(comment, start, end)} // Call the handleAddCommentClick function
         className='px-3 py-2 border-r border-gray-200'
       >
         Add Comment
@@ -40,6 +51,8 @@ const Toolbar = ({ postId, onSubmit, onClose }) => {
           postId={postId}
           onSubmit={handleSubmit}
           onClose={() => setShowCommentDialog(false)}
+          start={start}
+          end={end}
         />
       )}
     </div>

@@ -1,14 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const Comment = require('./models/commentModel');
-const postRoutes = require('./routes/posts');
-
-app.use('/api/posts', postRoutes);
 
 // Route for adding a comment to a blog post
 router.post('/posts/:id/comments', async (req, res) => {
   const postId = req.params.id;
-  const { content, author, date } = req.body;
+  const { content, author, date, start, end } = req.body;
 
   try {
     // Create a new comment using the Comment model
@@ -17,6 +14,8 @@ router.post('/posts/:id/comments', async (req, res) => {
       content,
       author,
       date,
+      start,
+      end,
     });
 
     res.status(201).json(newComment);

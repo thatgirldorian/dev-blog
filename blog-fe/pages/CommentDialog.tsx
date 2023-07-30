@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const CommentDialog = ({ onClose, postId }) => {
+const CommentDialog = ({ onClose, postId, onSubmit, start, end }) => {
   const [commentContent, setCommentContent] = useState('');
   const [authorName, setAuthorName] = useState('');
+  const [comment, setComment] = useState('');
+
+  const handleSubmit = () => {
+    onSubmit(comment, start, end);
+  };
 
   const handleCommentSubmit = async () => {
     try {
@@ -65,7 +70,7 @@ const CommentDialog = ({ onClose, postId }) => {
         onChange={(e) => setAuthorName(e.target.value)}
       />
 
-      <button onClick={handleCommentSubmit}>Submit</button>
+      <button onClick={handleSubmit}>Submit</button>
       <button onClick={onClose}>Cancel</button>
     </div>
   );

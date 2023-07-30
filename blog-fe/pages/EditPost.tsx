@@ -63,6 +63,105 @@ const EditPost = ({ postId, postData }) => {
     fetchComments();
   }, [postId, comments]);
 
+  const highlightText = () => {
+    const selection = window.getSelection();
+    if (selection && selection.toString()) {
+      const range = selection.getRangeAt(0);
+      const contentEl = contentRef.current;
+      const contentText = contentEl.textContent;
+      const start = getContentOffset(
+        contentText,
+        range.startContainer,
+        range.startOffset
+      );
+      const end = getContentOffset(
+        contentText,
+        range.endContainer,
+        range.endOffset
+      );
+
+      // Highlight the selection
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      // Save the start and end values to the component state
+      setStart(start);
+      setEnd(end);
+
+      // Open the toolbar when text is highlighted
+      setIsToolbarOpen(true);
+    } else {
+      // If nothing is selected, reset the highlightedText state and close the toolbar
+      setHighlightedText([]);
+      setIsToolbarOpen(false);
+    }
+  };
+
+  // Helper to get the offset of a node within its parent text content
+  const getContentOffset = (textContent, node, offset) => {
+    let totalOffset = 0;
+    const walker = document.createTreeWalker(
+      textContent,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
+
+    while (walker.nextNode()) {
+      const currentNode = walker.currentNode;
+
+      if (currentNode === node) {
+        return totalOffset + offset;
+      } else {
+        totalOffset += currentNode.length;
+      }
+    }
+
+    return totalOffset;
+  };
+
+  const handleTextSelection = () => {
+    console.log('Mouseup event detected');
+    console.log(start, end);
+
+    const selection = window.getSelection();
+    if (selection && selection.toString()) {
+      const range = selection.getRangeAt(0);
+      const contentEl = contentRef.current;
+      const contentRect = contentEl.getBoundingClientRect(); // Get the position of the content element
+      const rect = range.getBoundingClientRect(); // Get the position of the selected text
+      const mouseX = rect.left + rect.width / 2;
+      const mouseY = rect.top;
+
+      // Set the highlightedText state with the array of a single range
+      setHighlightedText([{ start, end }]);
+
+      // Set the start and end state with the first range in the selection
+      setStart(range.startOffset);
+      setEnd(range.endOffset);
+
+      // Calculate the top and left positions of the toolbar to position it near the selected text
+      const toolbarTop = mouseY - contentRect.top - 40; // Adjust this value to position the toolbar above the selected text
+      const toolbarLeft = mouseX - contentRect.left - 75; // Adjust this value to center the toolbar on the selected text
+
+      // Set the toolbar position after the state is updated
+      setToolbarPosition({
+        top: toolbarTop,
+        left: toolbarLeft,
+      });
+
+      // Set the highlightedText state with the array of a single range
+      setHighlightedText([{ start: range.startOffset, end: range.endOffset }]);
+
+      // Open the toolbar when text is highlighted
+      setIsToolbarOpen(true);
+    } else {
+      // If nothing is selected, reset the highlightedText state and close the toolbar
+      setHighlightedText([]);
+      setIsToolbarOpen(false);
+    }
+  };
+
   const handleContentChange = (event) => {
     const contentValue = event.target.value;
     setPost({ ...post, content: contentValue });
@@ -74,56 +173,6 @@ const EditPost = ({ postId, postData }) => {
       setPost({ ...post, [name]: checked });
     } else {
       setPost({ ...post, [name]: value });
-    }
-  };
-
-  const highlightText = (start, end) => {
-    // Get references to the content element and its text nodes using useRef
-    const contentEl = contentRef.current;
-
-    if (!contentEl) {
-      // Handle error case if content element not found
-      console.error('Content element not found');
-      return;
-    }
-
-    // Get the actual text content from the content element
-    const contentText = contentEl.textContent;
-
-    // Highlight the selection
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.setStart(contentEl.firstChild, start);
-    range.setEnd(contentEl.firstChild, end);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  };
-
-  // Helper to get text nodes
-  const getTextNodesIn = (el) => {
-    if (!el) {
-      return [];
-    }
-
-    let n,
-      a = [];
-    walk(el);
-    return a;
-
-    function walk(el) {
-      for (n = el.firstChild; n; n = n.nextSibling) {
-        if (n.nodeType === 3) {
-          // text node
-          a.push({
-            node: n,
-            start: n.textContent.slice(0, n.textContent.length),
-            end: n.textContent.slice(0, n.textContent.length),
-          });
-        } else if (n.nodeType === 1) {
-          // element node
-          walk(n);
-        }
-      }
     }
   };
 
@@ -195,7 +244,7 @@ const EditPost = ({ postId, postData }) => {
     setIsToolbarOpen(false);
   };
 
-  const handleAddComment = async (comment) => {
+  const handleAddComment = async (comment, start, end) => {
     // Handle the comment submission here (e.g., save it to the server)
     console.log('Adding comment:', comment);
 
@@ -203,16 +252,25 @@ const EditPost = ({ postId, postData }) => {
       // Save the comment to the server
       const response = await axios.post(
         `http://localhost:5001/api/posts/${postId}/comments`,
-        comment,
-        start,
-        end
+        {
+          ...comment,
+          start: start,
+          end: end,
+        }
       );
 
       // Get the newly added comment from the server response
       const newComment = response.data;
 
       // Update the comments state with the new comment
-      dispatch({ type: 'ADD_COMMENT', comment: newComment });
+      dispatch({
+        type: 'ADD_COMMENT',
+        comment: {
+          ...newComment,
+          start,
+          end,
+        },
+      });
 
       setHighlightedText((prevHighlightedText) => {
         const updatedHighlightedText = prevHighlightedText.map((segment) => {
@@ -233,44 +291,6 @@ const EditPost = ({ postId, postData }) => {
     } catch (error) {
       // Handle error, e.g., show an error message
       console.error('Error adding comment:', error);
-    }
-  };
-
-  const handleTextSelection = () => {
-    const selection = window.getSelection();
-    if (selection && selection.toString()) {
-      const range = selection.getRangeAt(0);
-      const start = range.startOffset;
-      const end = range.endOffset;
-
-      // Set the highlightedText state with the array of a single range
-      setHighlightedText([{ start, end }]);
-
-      // Set the start and end state with the first range in the selection
-      setStart(start);
-      setEnd(end);
-
-      // Get the coordinates of the mouse when the text is selected
-      const rect = range.getBoundingClientRect();
-      const mouseX = rect.left + rect.width / 2;
-      const mouseY = rect.top;
-
-      if (!isToolbarOpen) {
-        // Open the toolbar when text is highlighted and CommentModal is not open
-        setIsToolbarOpen(true);
-      }
-
-      // Set the toolbar position after the state is updated
-      setToolbarPosition({
-        top: mouseY - contentRef.current.offsetTop - 40, // Adjust this value to position the toolbar above the selected text
-        left: mouseX - contentRef.current.offsetLeft, // Position the toolbar relative to the left of the content container
-      });
-
-      calculateToolbarPosition(mouseX, mouseY);
-    } else {
-      // If nothing is selected, reset the highlightedText state and close the toolbar
-      setHighlightedText([]);
-      setIsToolbarOpen(false);
     }
   };
 
@@ -348,7 +368,7 @@ const EditPost = ({ postId, postData }) => {
     return () => {
       contentRef.current?.removeEventListener('mouseup', handleTextSelection);
     };
-  }, [highlightText]);
+  }, []);
 
   return (
     <div className='max-w-xl mx-12 mt-12'>
@@ -374,7 +394,7 @@ const EditPost = ({ postId, postData }) => {
           <p className='text-[18px] text-gray-600 font-medium my-2'>
             {post.author}
           </p>
-          <p className='my-4' ref={contentRef}>
+          <p className='my-4' ref={contentRef} onMouseUp={handleTextSelection}>
             <Highlight
               matchStyle={{ backgroundColor: 'pink' }}
               search={highlightedText
@@ -467,8 +487,10 @@ const EditPost = ({ postId, postData }) => {
         {isToolbarOpen && (
           <Toolbar
             postId={postId}
+            handleAddComment={handleAddComment}
+            start={start}
+            end={start}
             isOpen={isToolbarOpen}
-            // onClose={handleCloseToolbars} // Close the toolbar when clicking "Cancel"
             onSubmit={handleAddComment} // Handle adding comments in the Toolbar
             highlightedText={highlightedText}
             highlightText={highlightText}
