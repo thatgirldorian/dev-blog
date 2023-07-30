@@ -2,6 +2,7 @@ import { useEffect, useContext, useState } from 'react';
 import { BlogContext } from './contexts/BlogContext';
 import { fetchBlogPosts } from './api/posts';
 import EditPost from './EditPost';
+import { Header } from './Header';
 
 import Link from 'next/link';
 
@@ -36,6 +37,8 @@ export const BlogPage = () => {
 
   return (
     <div className='p-4 mt-12'>
+      <Header />
+      <p>Hi! I'm writing about front-end development and learning in public.</p>
       <div className='flex gap-32'>
         <h1 className='text-2xl font-bold'>Read our blog</h1>
         <button className='bg-green-500 text-white px-4 py-2 rounded'>
@@ -71,6 +74,10 @@ export const BlogPage = () => {
 
       {/* Render the EditPost component with the selected blog post data */}
       {selectedPost && <EditPost postData={selectedPost} />}
+      <footer>
+        <p>2023 Debbie's Blog</p>
+        <p>Built with &#10084; and &#128293; </p>
+      </footer>
     </div>
   );
 };
