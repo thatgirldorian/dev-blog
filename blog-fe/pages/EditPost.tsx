@@ -100,8 +100,10 @@ const EditPost = ({ postId, postData }) => {
   // Helper to get the offset of a node within its parent text content
   const getContentOffset = (textContent, node, offset) => {
     let totalOffset = 0;
+    const tempElement = document.createElement('div'); // Create a temporary element
+    tempElement.innerHTML = textContent; // Set the temporary element's innerHTML to the content
     const walker = document.createTreeWalker(
-      textContent,
+      tempElement, // Use the temporary element as the root node for the tree walker
       NodeFilter.SHOW_TEXT,
       null,
       false
@@ -111,38 +113,43 @@ const EditPost = ({ postId, postData }) => {
       const currentNode = walker.currentNode;
 
       if (currentNode === node) {
+        // Clean up the temporary element
+        tempElement.remove();
         return totalOffset + offset;
       } else {
         totalOffset += currentNode.length;
       }
     }
 
+    // Clean up the temporary element
+    tempElement.remove();
+
     return totalOffset;
   };
 
   const handleTextSelection = () => {
-    console.log('Mouseup event detected');
-    console.log(start, end);
-
     const selection = window.getSelection();
     if (selection && selection.toString()) {
       const range = selection.getRangeAt(0);
       const contentEl = contentRef.current;
-      const contentRect = contentEl.getBoundingClientRect(); // Get the position of the content element
-      const rect = range.getBoundingClientRect(); // Get the position of the selected text
-      const mouseX = rect.left + rect.width / 2;
-      const mouseY = rect.top;
-
-      // Set the highlightedText state with the array of a single range
-      setHighlightedText([{ start, end }]);
-
-      // Set the start and end state with the first range in the selection
-      setStart(range.startOffset);
-      setEnd(range.endOffset);
 
       // Calculate the top and left positions of the toolbar to position it near the selected text
-      const toolbarTop = mouseY - contentRect.top - 40; // Adjust this value to position the toolbar above the selected text
-      const toolbarLeft = mouseX - contentRect.left - 75; // Adjust this value to center the toolbar on the selected text
+      const contentRect = contentEl.getBoundingClientRect();
+      const rect = range.getBoundingClientRect();
+      const mouseX = rect.left + rect.width / 2;
+      const mouseY = rect.top;
+      const toolbarTop = mouseY - contentRect.top - 40;
+      const toolbarLeft = mouseX - contentRect.left - 75;
+
+      // Use range's startOffset and endOffset directly to get the offsets
+      const start = range.startOffset;
+      const end = range.endOffset;
+
+      console.log('Start Offset:', start);
+      console.log('End Offset:', end);
+      // Set the start and end state with the calculated offsets
+      setStart(start);
+      setEnd(end);
 
       // Set the toolbar position after the state is updated
       setToolbarPosition({
@@ -151,7 +158,7 @@ const EditPost = ({ postId, postData }) => {
       });
 
       // Set the highlightedText state with the array of a single range
-      setHighlightedText([{ start: range.startOffset, end: range.endOffset }]);
+      setHighlightedText([{ start, end }]);
 
       // Open the toolbar when text is highlighted
       setIsToolbarOpen(true);
@@ -248,6 +255,8 @@ const EditPost = ({ postId, postData }) => {
     const commentData = {
       content: commentContent,
       author: authorName,
+      start: start,
+      end: end,
     };
 
     // Handle the comment submission here (e.g., save it to the server)

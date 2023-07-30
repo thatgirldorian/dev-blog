@@ -10,7 +10,7 @@ const Toolbar = ({
   end,
 }) => {
   const [showCommentDialog, setShowCommentDialog] = useState(false);
-  const [comment, setComment] = useState('');
+
   const [commentContent, setCommentContent] = useState(''); // State to store the comment content
   const [authorName, setAuthorName] = useState(''); // State to store the author name
 
@@ -22,7 +22,7 @@ const Toolbar = ({
     // Call the handleAddComment function with the correct arguments
     handleAddComment(commentContent, authorName, start, end);
     // Call the onSubmit callback prop with the comment as an argument
-    onSubmit(commentContent, authorName);
+    // onSubmit(commentContent, authorName);
 
     // Clear the comment input after submission
     setCommentContent('');
