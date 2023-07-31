@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Comment = require('./models/commentModel');
 
-// Route for adding a comment to a blog post
+//adding a comment to a blog post
 router.post('/posts/:id/comments', async (req, res) => {
   const postId = req.params.id;
   const { content, author, date, start, end } = req.body;
@@ -25,7 +25,7 @@ router.post('/posts/:id/comments', async (req, res) => {
   }
 });
 
-// Route for fetching comments for a specific blog post
+//fetching comments for a specific blog post
 router.get('/posts/:id/comments', async (req, res) => {
   const postId = req.params.id;
 

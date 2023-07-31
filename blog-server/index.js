@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const express = require('express');
 const mongoose = require('mongoose');
 const postsRoute = require('./posts');
@@ -28,11 +27,9 @@ app.use(express.json());
 app.use('/api', postsRoute);
 app.use('/api', commentsRoute);
 
-// Make sure you have the correct route for fetching a single post by ID
 app.get('/api/posts/:id', async (req, res) => {
   const postId = req.params.id;
 
-  // Use your Mongoose model to find the post by ID in the database
   try {
     const post = await Post.findById(postId);
     res.status(200).json(post);
