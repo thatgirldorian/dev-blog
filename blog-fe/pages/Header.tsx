@@ -5,7 +5,7 @@ import { Newspaper } from 'react-ionicons';
 
 export const Header = () => {
   return (
-    <header className='px-32 fixed top-0 left-0 w-full z-10 header flex flex-col md:flex-row justify-between items-center min-h-[104px] py-[16px] md:py-0'>
+    <header className='flex px-32 header flex-col md:flex-row justify-between items-center py-[16px]  z-50 w-full border-b relative border-transparent md:border-none'>
       <div className='flex items-center md:pb-0 pb-4'>
         <img
           src='/images/Debbie_pfp.jpeg'

@@ -8,6 +8,7 @@ import { PencilOutline } from 'react-ionicons';
 import { Button } from './Button';
 
 import Link from 'next/link';
+import { Footer } from './Footer';
 
 export const BlogPage = () => {
   const { blogData, setBlogData } = useContext(BlogContext);
@@ -50,64 +51,63 @@ export const BlogPage = () => {
   };
 
   return (
-    <div className='mt-16'>
+    <>
       <Header />
-      <AuthorCard />
-      <div className='mt-10 mx-4 sm:mx-64'>
-        <ul className='grid grid-cols-1 sm:grid-cols-2 gap-12'>
-          {blogData.map((post) => (
-            <li
-              key={post._id}
-              className='border-gray-500 sm:w-full sm:mb-0 sm:px-4 p-4 max-w-[550px] my-2 '
-            >
-              <img
-                src={`/images/${post.imageFileName}`}
-                alt='Blog Post'
-                className='rounded-md'
-              />
-              <h2 className='text-[30px] font-bold my-4 leading-[1.2]'>
-                {post.title}
-              </h2>
-              <div className='blog-post-info flex gap-4 my-4'>
-                <p className='text-[14px] text-[#64748b] font-semibold '>
-                  {post.author}
+      <main className='min-h-screen'>
+        <AuthorCard />
+        <div className='mt-10 mx-4 sm:mx-64 '>
+          <ul className='grid grid-cols-1 sm:grid-cols-2 gap-12'>
+            {blogData.map((post) => (
+              <li
+                key={post._id}
+                className='border-gray-500 sm:w-full sm:mb-0 sm:px-4 p-4 max-w-[550px] my-2 '
+              >
+                <img
+                  src={`/images/${post.imageFileName}`}
+                  alt='Blog Post'
+                  className='rounded-md'
+                />
+                <h2 className='text-[30px] font-bold my-4 leading-[1.2]'>
+                  {post.title}
+                </h2>
+                <div className='blog-post-info flex gap-4 my-4'>
+                  <p className='text-[14px] text-[#64748b] font-semibold '>
+                    {post.author}
+                  </p>
+                  <p className='text-[14px] text-[#64748b] font-medium flex items-center'>
+                    <span className='mr-2'>&#8226;</span>
+                    {formatDate(post.date)}
+                  </p>
+                </div>
+
+                <p className=' text-[18px] mb-4'>
+                  {truncateContent(post.content, 25)}
                 </p>
-                <p className='text-[14px] text-[#64748b] font-medium flex items-center'>
-                  <span className='mr-2'>&#8226;</span>
-                  {formatDate(post.date)}
-                </p>
-              </div>
 
-              <p className=' text-[18px] mb-4'>
-                {truncateContent(post.content, 25)}
-              </p>
+                <div className='flex gap-8 mt-4'>
+                  <Link href={`/edit/${post._id}`} passHref>
+                    <Button
+                      icon={
+                        <PencilOutline
+                          height='16px'
+                          width='16px'
+                          style={{ color: 'white' }}
+                        />
+                      }
+                      text='Edit Post'
+                      className='text-white border-rounded bg-blue-700 '
+                    />
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-              <div className='flex gap-8 mt-4'>
-                <Link href={`/edit/${post._id}`} passHref>
-                  <Button
-                    icon={
-                      <PencilOutline
-                        height='16px'
-                        width='16px'
-                        style={{ color: 'white' }}
-                      />
-                    }
-                    text='Edit Post'
-                    className='text-white border-rounded bg-blue-700 '
-                  />
-                </Link>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Render the EditPost component with the selected blog post data */}
-      {selectedPost && <EditPost postData={selectedPost} />}
-      <footer>
-        <p>2023 Debbie's Blog</p>
-        <p>Built with &#10084; and &#128293; </p>
-      </footer>
-    </div>
+        {/* Render the EditPost component with the selected blog post data */}
+        {selectedPost && <EditPost postData={selectedPost} />}
+        <Footer />
+      </main>
+    </>
   );
 };

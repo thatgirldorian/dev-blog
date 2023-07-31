@@ -366,7 +366,7 @@ const EditPost = ({ postId, postData }) => {
   }, []);
 
   return (
-    <div className='max-w-xl mx-12 mt-12'>
+    <div className='max-w-[950px] mx-auto my-auto sm:my-0 mt-12 px-4 sm:px-16'>
       <button onClick={handleRedirect}>Home</button>
       <h1 className='text-2xl font-bold mb-4'>Edit Blog Post</h1>
       <button
