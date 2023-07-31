@@ -1,9 +1,24 @@
-import { createContext, useState } from 'react';
+// contexts/BlogContext.tsx
 
-const BlogContext = createContext();
+import { createContext, useState, useEffect } from 'react';
+import { fetchBlogPosts } from '../api/posts';
+import { BlogPost, BlogContextType } from './BlogTypes';
 
-const BlogProvider = ({ children }) => {
-  const [blogData, setBlogData] = useState([]);
+export const BlogContext = createContext<BlogContextType>({
+  blogData: [],
+  setBlogData: () => {},
+});
+
+export const BlogProvider: React.FC = ({ children }) => {
+  const [blogData, setBlogData] = useState<BlogPost[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetchBlogPosts();
+      setBlogData(data);
+    }
+    fetchData();
+  }, []);
 
   return (
     <BlogContext.Provider value={{ blogData, setBlogData }}>
@@ -11,5 +26,3 @@ const BlogProvider = ({ children }) => {
     </BlogContext.Provider>
   );
 };
-
-export { BlogContext, BlogProvider };

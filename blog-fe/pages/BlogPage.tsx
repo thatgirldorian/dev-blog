@@ -1,5 +1,7 @@
 import { useEffect, useContext, useState } from 'react';
 import { BlogContext } from './contexts/BlogContext';
+import { BlogPost, BlogContextType } from './contexts/BlogTypes'; // Correct import statement
+
 import { fetchBlogPosts } from './api/posts';
 import EditPost from './EditPost';
 import { Header } from './Header';
