@@ -1,25 +1,13 @@
 import React, { useState } from 'react';
 import CommentDialog from './CommentDialog';
 
-const Toolbar = ({
-  postId,
-  onSubmit,
-  onClose,
-  handleAddComment,
-  start,
-  end,
-}) => {
+const Toolbar = ({ postId, handleAddComment, start, end }) => {
   const [showCommentDialog, setShowCommentDialog] = useState(false);
 
   const [commentContent, setCommentContent] = useState(''); // State to store the comment content
   const [authorName, setAuthorName] = useState(''); // State to store the author name
 
-  const openDialog = () => {
-    setShowCommentDialog(true);
-  };
-
   const handleSubmit = () => {
-    // Call the handleAddComment function with the correct arguments
     handleAddComment(commentContent, authorName, start, end);
 
     // Clear the comment input after submission
@@ -40,10 +28,7 @@ const Toolbar = ({
       <button className='px-3 py-2 border-r border-gray-200'>
         Toggle Preview
       </button>
-      <button
-        onClick={() => handleAddCommentClick()} // Call the handleAddCommentClick function
-        className='px-3 py-2'
-      >
+      <button onClick={() => handleAddCommentClick()} className='px-3 py-2'>
         Add Comment
       </button>
       {showCommentDialog && (

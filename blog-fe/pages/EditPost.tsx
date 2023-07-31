@@ -1,4 +1,3 @@
-// EditPost.js (Edit component for editing a blog post)
 import { useState, useEffect, useContext, useRef, useReducer } from 'react';
 import { useRouter } from 'next/router';
 import { fetchBlogPostById, updateBlogPost } from '../pages/api/posts';
@@ -128,8 +127,6 @@ const EditPost = ({ postId, postData }) => {
       const start = range.startOffset;
       const end = range.endOffset;
 
-      console.log('Start Offset:', start);
-      console.log('End Offset:', end);
       // Set the start and end state with the calculated offsets
       setStart(start);
       setEnd(end);
@@ -172,7 +169,6 @@ const EditPost = ({ postId, postData }) => {
 
   const handleSave = async () => {
     try {
-      // Send the updated post data, including draft status, to the backend
       await updateBlogPost(postId, {
         title: post.title,
         content: post.content,
@@ -181,7 +177,6 @@ const EditPost = ({ postId, postData }) => {
       });
 
       if (!post) {
-        // If post is null (still loading data), show a loading message or spinner
         return <div>Loading...</div>;
       }
 
@@ -197,10 +192,7 @@ const EditPost = ({ postId, postData }) => {
         });
         return updatedBlogData;
       });
-
-      // Handle success, e.g., show a success message or redirect to the post page
     } catch (error) {
-      // Handle error, e.g., show an error message
       console.error('Error updating blog post:', error);
     }
   };
@@ -218,10 +210,7 @@ const EditPost = ({ postId, postData }) => {
         author: post.author,
         draft: true, // Set the draft status to true for saving as draft
       });
-      console.log('Draft has been saved');
-      // Handle success, e.g., show a success message or redirect to the post page
     } catch (error) {
-      // Handle error, e.g., show an error message
       console.error('Error saving blog post as draft:', error);
     }
   };
@@ -242,11 +231,7 @@ const EditPost = ({ postId, postData }) => {
       end: end,
     };
 
-    // Handle the comment submission here (e.g., save it to the server)
-    console.log('Adding comment:', commentData, start, end);
-
     try {
-      // Save the comment to the server
       const response = await axios.post(
         `http://localhost:5001/api/posts/${postId}/comments`,
         {
@@ -256,7 +241,6 @@ const EditPost = ({ postId, postData }) => {
         }
       );
 
-      // Get the newly added comment from the server response
       const newComment = response.data;
 
       // Update the comments state with the new comment
@@ -275,7 +259,6 @@ const EditPost = ({ postId, postData }) => {
             segment.start === selectedText.start &&
             segment.end === selectedText.end
           ) {
-            // If the segment matches the selected text, update its comments
             return { ...segment, comments: [...segment.comments, newComment] };
           }
           return segment;
@@ -283,16 +266,13 @@ const EditPost = ({ postId, postData }) => {
         return updatedHighlightedText;
       });
 
-      // Close the toolbar after a comment has been added
       setIsToolbarOpen(false);
     } catch (error) {
-      // Handle error, e.g., show an error message
       console.error('Error adding comment:', error);
     }
   };
 
   const handleCommentSidebarClick = async (comment, start, end) => {
-    console.log('Clicked on comment:', comment);
     highlightText(start, end);
     // Highlight the corresponding text based on the clicked comment
     setHighlightedComment(comment);
@@ -307,11 +287,10 @@ const EditPost = ({ postId, postData }) => {
       );
 
       const highlightedComments = response.data;
-      // Set the highlighted comments state to update the UI
+
       setHighlightedText((prevHighlightedText) => {
         const updatedHighlightedText = prevHighlightedText.map((segment) => {
           if (segment.start === comment.start && segment.end === comment.end) {
-            // If the segment matches the selected text, update its comments
             return { ...segment, comments: highlightedComments };
           }
           return segment;
@@ -330,21 +309,19 @@ const EditPost = ({ postId, postData }) => {
     const containerWidth = contentRect.width;
     const containerHeight = contentRect.height;
 
-    const toolbarWidth = 150; // Set the desired width of the toolbar
-    const toolbarHeight = 50; // Set the desired height of the toolbar
+    const toolbarWidth = 150;
+    const toolbarHeight = 50;
 
     // Calculate the top and left positions of the toolbar to position it near the selected text
-    let top = mouseY - containerTop - toolbarHeight - 4; // Adjust this value to position the toolbar above the selected text
+    let top = mouseY - containerTop - toolbarHeight - 4;
     let left = mouseX - containerLeft - toolbarWidth / 2;
 
-    // Ensure the toolbar is within the container bounds horizontally
     if (left < 0) {
       left = 0;
     } else if (left + toolbarWidth > containerWidth) {
       left = containerWidth - toolbarWidth;
     }
 
-    // Ensure the toolbar is within the container bounds vertically
     if (top < 0) {
       top = 0;
     } else if (top + toolbarHeight > containerHeight) {
@@ -471,7 +448,6 @@ const EditPost = ({ postId, postData }) => {
         </div>
       )}
 
-      {/* Conditionally render the comment sidebars only in preview mode */}
       {previewMode && (
         <div className='comment-sidebar-container'>
           {comments.map((comment) => (
@@ -495,7 +471,7 @@ const EditPost = ({ postId, postData }) => {
             start={start}
             end={end}
             isOpen={isToolbarOpen}
-            onSubmit={handleAddComment} // Handle adding comments in the Toolbar
+            onSubmit={handleAddComment}
             highlightedText={highlightedText}
             highlightText={highlightText}
             style={{

@@ -67,8 +67,3 @@ header {
 .comment-sidebar {
   cursor: pointer;
 }
-
-.highlighted-text {
-  background-color: blue;
-  color: white;
-}

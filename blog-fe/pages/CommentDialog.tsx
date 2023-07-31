@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Send } from 'react-ionicons';
-import { CloseCircle } from 'react-ionicons';
 
 const CommentDialog = ({ onClose, postId, onSubmit, start, end }) => {
   const [commentContent, setCommentContent] = useState('');
@@ -14,7 +12,6 @@ const CommentDialog = ({ onClose, postId, onSubmit, start, end }) => {
     }
 
     try {
-      // Prepare the comment data to send in the request
       const commentData = {
         postId: postId,
         content: commentContent,
@@ -24,24 +21,18 @@ const CommentDialog = ({ onClose, postId, onSubmit, start, end }) => {
         end: end,
       };
 
-      // Send the HTTP POST request to the backend API
       const response = await axios.post(
         `http://localhost:5001/api/posts/${postId}/comments`,
         commentData
       );
 
-      // Handle the response, e.g., show a success message or refresh the comments
-      console.log('Comment added:', response.data);
-
       // Reset the commentContent & authorName state after submission
       setCommentContent('');
       setAuthorName('');
 
-      // Close the dialog after the comment is successfully submitted
       onClose();
     } catch (error) {
       console.error('Error adding comment:', error);
-      // Handle the error, e.g., show an error message
     }
   };
 
@@ -64,7 +55,6 @@ const CommentDialog = ({ onClose, postId, onSubmit, start, end }) => {
         marginRight: '24px',
       }}
     >
-      {/* Add your comment input field and submit button here */}
       <textarea
         rows={4}
         placeholder='Add a comment..'
@@ -73,7 +63,6 @@ const CommentDialog = ({ onClose, postId, onSubmit, start, end }) => {
         style={{ outline: 'none', border: 'none', resize: 'none' }}
       ></textarea>
 
-      {/* Add your comment input field and submit button here */}
       <input
         type='text'
         placeholder='Add your name...'

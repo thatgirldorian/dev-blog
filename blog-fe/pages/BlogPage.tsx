@@ -18,8 +18,8 @@ export const BlogPage = () => {
     // Fetch the blog post data when the component mounts
     async function fetchData() {
       const data = await fetchBlogPosts();
-      console.log(data);
-      setBlogData(data); // Update the blogData in the context with the fetched data
+
+      setBlogData(data);
     }
     fetchData();
   }, []);
@@ -28,7 +28,6 @@ export const BlogPage = () => {
     return <div>Loading...</div>;
   }
 
-  // Function to format the date
   const formatDate = (dateString) => {
     const options = {
       year: 'numeric',
@@ -104,7 +103,6 @@ export const BlogPage = () => {
           </ul>
         </div>
 
-        {/* Render the EditPost component with the selected blog post data */}
         {selectedPost && <EditPost postData={selectedPost} />}
         <Footer />
       </main>

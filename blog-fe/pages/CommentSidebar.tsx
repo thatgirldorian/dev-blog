@@ -6,7 +6,6 @@ const CommentSidebar = ({ comment, onClick, isSelected, start, end }) => {
     // Prevent the event from propagating to the parent elements
     event.stopPropagation();
 
-    // Handle the click event on the comment
     onClick(comment, start, end);
   };
 
