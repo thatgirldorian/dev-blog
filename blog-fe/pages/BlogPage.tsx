@@ -56,11 +56,11 @@ export const BlogPage = () => {
       <main className='min-h-screen'>
         <AuthorCard />
         <div className='mt-10 mx-4 sm:mx-64 '>
-          <ul className='grid grid-cols-1 sm:grid-cols-2 gap-12'>
+          <ul className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             {blogData.map((post) => (
               <li
                 key={post._id}
-                className='border-gray-500 sm:w-full sm:mb-0 sm:px-4 p-4 max-w-[550px] my-2 '
+                className='border-gray-500 sm:w-full sm:mb-0 sm:px-4 p-4 max-w-[550px] my-2'
               >
                 <img
                   src={`/images/${post.imageFileName}`}
@@ -95,7 +95,7 @@ export const BlogPage = () => {
                         />
                       }
                       text='Edit Post'
-                      className='text-white border-rounded bg-blue-700 '
+                      className='text-white border-rounded bg-blue-500'
                     />
                   </Link>
                 </div>

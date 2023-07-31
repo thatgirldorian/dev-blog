@@ -9,6 +9,8 @@ import Toolbar from './Toolbar';
 import CommentSidebar from './CommentSidebar';
 import axios from 'axios';
 import commentsReducer from '../reducers/commentsReducer';
+import { Button } from './Button';
+import { ArrowBack, PencilOutline } from 'react-ionicons';
 
 const EditPost = ({ postId, postData }) => {
   const router = useRouter();
@@ -367,20 +369,29 @@ const EditPost = ({ postId, postData }) => {
 
   return (
     <div className='max-w-[950px] mx-auto my-auto sm:my-0 mt-12 px-4 sm:px-16'>
-      <button onClick={handleRedirect}>Home</button>
-      <h1 className='text-2xl font-bold mb-4'>Edit Blog Post</h1>
-      <button
-        onClick={handleSaveAsDraft}
-        className='bg-blue-500 text-white px-4 py-2 rounded'
-      >
-        Save as draft
-      </button>
-      <button
-        className='bg-yellow-500 text-white px-4 py-2 rounded ml-4'
-        onClick={handlePreviewToggle}
-      >
-        {previewMode ? 'Edit' : 'Preview'}
-      </button>
+      <div className='flex items-center  justify-between'>
+        <Button
+          icon={<ArrowBack />}
+          text={'Blog Home'}
+          className={`text-black -ml-6 py-4`}
+          onClick={handleRedirect}
+        />
+
+        <div className='flex items-center gap-2'>
+          <Button
+            text='Save draft'
+            className='border border-slate-200 rounded py-2 px-4'
+            onClick={handleSaveAsDraft}
+          />
+          <Button
+            text={previewMode ? 'Edit' : 'Preview'}
+            className='border border-slate-200 rounded py-2 px-4 hover:bg-slate-200'
+            onClick={handlePreviewToggle}
+          />
+        </div>
+      </div>
+
+      <h1 className='text-2xl font-bold py-4'>Edit Blog Post</h1>
 
       {previewMode ? (
         <div>
@@ -404,9 +415,9 @@ const EditPost = ({ postId, postData }) => {
         </div>
       ) : (
         <div>
-          <div className='my-8'>
-            <label className='block mb-2' htmlFor='title'>
-              Title:
+          <div className='my-2'>
+            <label className='block my-2 font-medium' htmlFor='title'>
+              Title
             </label>
             <input
               className='w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
@@ -418,8 +429,8 @@ const EditPost = ({ postId, postData }) => {
             />
           </div>
           <div className='mb-4'>
-            <label className='block mb-2' htmlFor='content'>
-              Content:
+            <label className='block mb-2 my-2 font-medium' htmlFor='content'>
+              Content
             </label>
             <textarea
               className='textarea-input w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
@@ -429,8 +440,8 @@ const EditPost = ({ postId, postData }) => {
             />
           </div>
           <div className='mb-4'>
-            <label className='block mb-2' htmlFor='author'>
-              Author:
+            <label className='block mb-2 my-2 font-medium' htmlFor='author'>
+              Author
             </label>
             <input
               className='w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500'
@@ -442,8 +453,8 @@ const EditPost = ({ postId, postData }) => {
             />
           </div>
           <div className='mb-4'>
-            <label className='block mb-2' htmlFor='draft'>
-              Draft:
+            <label className='block mb-2 my-2 font-medium' htmlFor='draft'>
+              Draft
             </label>
             <input
               type='checkbox'
@@ -453,12 +464,11 @@ const EditPost = ({ postId, postData }) => {
             />
           </div>
 
-          <button
-            className='bg-green-500 text-white px-4 py-2 rounded'
+          <Button
+            text='Publish'
+            className='text-white border-rounded bg-blue-500'
             onClick={handleSave}
-          >
-            Publish
-          </button>
+          />
         </div>
       )}
 
