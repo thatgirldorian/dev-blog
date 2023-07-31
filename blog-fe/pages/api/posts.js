@@ -1,11 +1,28 @@
 import axios from 'axios';
 
+const imageFileNames = [
+  'Post_1_img.jpg',
+  'Post_2_img.jpg',
+  'Post_3_img.jpg',
+  'Post_4_img.jpg',
+  'Post_5_img.jpg',
+  'Post_6_img.jpg',
+];
+
 export async function fetchBlogPosts() {
   try {
     const response = await fetch('http://localhost:5001/api/posts');
     const data = await response.json();
+
+    // Update the data to include the imageFileName for each post
+    const blogDataWithImages = data.map((post, index) => ({
+      ...post,
+      imageFileName: imageFileNames[index % imageFileNames.length], // Use modulo to loop through the imageFileNames array
+    }));
+
     console.log(data);
-    return data;
+    return blogDataWithImages;
+    // return data;
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     return [];

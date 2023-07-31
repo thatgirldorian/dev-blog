@@ -4,6 +4,8 @@ import { fetchBlogPosts } from './api/posts';
 import EditPost from './EditPost';
 import { Header } from './Header';
 import { AuthorCard } from './AuthorCard';
+import { PencilOutline } from 'react-ionicons';
+import { Button } from './Button';
 
 import Link from 'next/link';
 
@@ -25,6 +27,17 @@ export const BlogPage = () => {
     return <div>Loading...</div>;
   }
 
+  // Function to format the date
+  const formatDate = (dateString) => {
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', options);
+  };
+
   const truncateContent = (content, wordLimit) => {
     const words = content.split(' ');
     const truncatedContent = words.slice(0, wordLimit).join(' ');
@@ -37,31 +50,52 @@ export const BlogPage = () => {
   };
 
   return (
-    <div className='mt-12'>
+    <div className='mt-16'>
       <Header />
       <AuthorCard />
-      <div className='p-4'>
-        <ul className='flex flex-wrap -mx-4'>
+      <div className='mt-10 mx-4 sm:mx-64'>
+        <ul className='grid grid-cols-1 sm:grid-cols-2 gap-12'>
           {blogData.map((post) => (
             <li
               key={post._id}
-              className='border rounded border-gray-500 w-full sm:w-1/2 sm:mb-0 sm:px-4 p-4 mt-4 ml-4 max-w-[550px]'
+              className='border-gray-500 sm:w-full sm:mb-0 sm:px-4 p-4 max-w-[550px] my-2 '
             >
-              <h2 className='text-lg font-bold mb-2'>{post.title}</h2>
-              <p className='mb-4'>{truncateContent(post.content, 25)}</p>
-              <p>Author: {post.author}</p>
-              <p>Date: {post.date}</p>
+              <img
+                src={`/images/${post.imageFileName}`}
+                alt='Blog Post'
+                className='rounded-md'
+              />
+              <h2 className='text-[30px] font-bold my-4 leading-[1.2]'>
+                {post.title}
+              </h2>
+              <div className='blog-post-info flex gap-4 my-4'>
+                <p className='text-[14px] text-[#64748b] font-semibold '>
+                  {post.author}
+                </p>
+                <p className='text-[14px] text-[#64748b] font-medium flex items-center'>
+                  <span className='mr-2'>&#8226;</span>
+                  {formatDate(post.date)}
+                </p>
+              </div>
+
+              <p className=' text-[18px] mb-4'>
+                {truncateContent(post.content, 25)}
+              </p>
+
               <div className='flex gap-8 mt-4'>
-                <Link
-                  href={`/edit/${post._id}`}
-                  passHref
-                  className='bg-blue-500 text-white px-4 py-2 rounded'
-                >
-                  Edit
+                <Link href={`/edit/${post._id}`} passHref>
+                  <Button
+                    icon={
+                      <PencilOutline
+                        height='16px'
+                        width='16px'
+                        style={{ color: 'white' }}
+                      />
+                    }
+                    text='Edit Post'
+                    className='text-white border-rounded bg-blue-700 '
+                  />
                 </Link>
-                <button className='bg-red-500 text-white px-4 py-2 rounded'>
-                  Delete
-                </button>
               </div>
             </li>
           ))}
