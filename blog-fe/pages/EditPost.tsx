@@ -11,7 +11,32 @@ import commentsReducer from '../reducers/commentsReducer';
 import { Button } from './Button';
 import { ArrowBack } from 'react-ionicons';
 
-const EditPost = ({ postId, postData }) => {
+interface Comment {
+  _id: string;
+  content: string;
+  author: string;
+  start: number;
+  end: number;
+}
+
+interface HighlightSegment {
+  start: number;
+  end: number;
+  comments: Comment[];
+}
+
+interface EditPostProps {
+  postId: string;
+  postData: {
+    title: string;
+    content: string;
+    author: string;
+    draft: boolean;
+    comments: Comment[];
+  };
+}
+
+const EditPost: React.FC<EditPostProps> = ({ postId, postData }) => {
   const router = useRouter();
 
   const [comments, dispatch] = useReducer(commentsReducer, []);
@@ -26,6 +51,7 @@ const EditPost = ({ postId, postData }) => {
 
   const [selectedText, setSelectedText] = useState('');
   const [highlightedComment, setHighlightedComment] = useState(null);
+
   const [start, setStart] = useState();
   const [end, setEnd] = useState();
 
@@ -53,16 +79,37 @@ const EditPost = ({ postId, postData }) => {
         const response = await axios.get(
           `http://localhost:5001/api/posts/${postId}/comments`
         );
+        const commentsData = response.data; // Assuming that response.data contains the comments array
+
         dispatch({
-          type: 'SET_COMMENTS',
-          payload: response.data,
+          type: 'SET_COMMENTS', // Dispatching the action type
+          payload: commentsData, // Passing the fetched comments data as payload
         });
       } catch (error) {
         console.error('Error fetching comments:', error);
       }
     }
     fetchComments();
-  }, [postId, comments]);
+  }, [postId]);
+
+  // useEffect(() => {
+  //   // Fetch the comments for the post by its ID when the component mounts
+  //   async function fetchComments() {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:5001/api/posts/${postId}/comments`
+  //       );
+
+  //       dispatch({
+  //         type: 'SET_COMMENTS',
+  //         payload: response.data,
+  //       });
+  //     } catch (error) {
+  //       console.error('Error fetching comments:', error);
+  //     }
+  //   }
+  //   fetchComments();
+  // }, [postId, comments]);
 
   const highlightText = (start, end) => {
     const contentEl = contentRef.current;
@@ -82,7 +129,7 @@ const EditPost = ({ postId, postData }) => {
     }
   };
 
-  const getNodeAtOffset = (rootNode, offset) => {
+  const getNodeAtOffset = (rootNode: Node, offset: number) => {
     const walker = document.createTreeWalker(
       rootNode,
       NodeFilter.SHOW_TEXT,
@@ -223,7 +270,12 @@ const EditPost = ({ postId, postData }) => {
     setIsToolbarOpen(false);
   };
 
-  const handleAddComment = async (commentContent, authorName, start, end) => {
+  const handleAddComment = async (
+    commentContent: any,
+    authorName: any,
+    start: any,
+    end: any
+  ) => {
     const commentData = {
       content: commentContent,
       author: authorName,
