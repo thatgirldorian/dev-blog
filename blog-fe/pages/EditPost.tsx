@@ -26,6 +26,7 @@ interface HighlightSegment {
 }
 
 interface EditPostProps {
+  postId: string;
   postData: {
     title: string;
     content: string;
@@ -33,7 +34,6 @@ interface EditPostProps {
     draft: boolean;
     comments: Comment[];
   };
-  postId: string | undefined;
 }
 
 const EditPost: React.FC<EditPostProps> = ({ postId, postData }) => {
@@ -82,8 +82,8 @@ const EditPost: React.FC<EditPostProps> = ({ postId, postData }) => {
         const commentsData = response.data; // Assuming that response.data contains the comments array
 
         dispatch({
-          type: 'SET_COMMENTS',
-          payload: commentsData,
+          type: 'SET_COMMENTS', // Dispatching the action type
+          payload: commentsData, // Passing the fetched comments data as payload
         });
       } catch (error) {
         console.error('Error fetching comments:', error);
