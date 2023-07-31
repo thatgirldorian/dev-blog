@@ -1,7 +1,7 @@
 import { useEffect, useContext, useState } from 'react';
 import { BlogContext } from './contexts/BlogContext';
 import { BlogPost, BlogContextType } from './contexts/BlogTypes';
-import { DateTimeFormatOptions } from 'node:intl';
+import { DateTimeFormatOptions } from 'intl';
 
 import { fetchBlogPosts } from './api/posts';
 import EditPost from './EditPost';
