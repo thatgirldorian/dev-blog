@@ -8,17 +8,18 @@ const EditPostPage = () => {
   const { postId } = router.query;
   const [postData, setPostData] = useState(null);
 
+  // Move the fetchPost function outside of the useEffect block
+  const fetchPost = async () => {
+    try {
+      const postData = await fetchBlogPostById(postId);
+      setPostData(postData);
+    } catch (error) {
+      console.error('Error fetching blog post:', error);
+    }
+  };
+
   useEffect(() => {
     if (postId) {
-      // Fetch the blog post data by its ID when the component mounts
-      async function fetchPost() {
-        try {
-          const postData = await fetchBlogPostById(postId);
-          setPostData(postData);
-        } catch (error) {
-          console.error('Error fetching blog post:', error);
-        }
-      }
       fetchPost();
     }
   }, [postId]);
