@@ -10,7 +10,7 @@ import CommentSidebar from './CommentSidebar';
 import axios from 'axios';
 import commentsReducer from '../reducers/commentsReducer';
 import { Button } from './Button';
-import { ArrowBack, PencilOutline } from 'react-ionicons';
+import { ArrowBack } from 'react-ionicons';
 
 const EditPost = ({ postId, postData }) => {
   const router = useRouter();
@@ -334,7 +334,7 @@ const EditPost = ({ postId, postData }) => {
     const toolbarHeight = 50; // Set the desired height of the toolbar
 
     // Calculate the top and left positions of the toolbar to position it near the selected text
-    let top = mouseY - containerTop - toolbarHeight - 10; // Adjust this value to position the toolbar above the selected text
+    let top = mouseY - containerTop - toolbarHeight - 4; // Adjust this value to position the toolbar above the selected text
     let left = mouseX - containerLeft - toolbarWidth / 2;
 
     // Ensure the toolbar is within the container bounds horizontally
@@ -368,7 +368,7 @@ const EditPost = ({ postId, postData }) => {
   }, []);
 
   return (
-    <div className='max-w-[950px] mx-auto my-auto sm:my-0 mt-12 px-4 sm:px-16'>
+    <div className='max-w-[950px] mx-auto my-auto sm:my-0 mt-12 px-4 sm:px-16 relative'>
       <div className='flex items-center  justify-between'>
         <Button
           icon={<ArrowBack />}
@@ -394,15 +394,14 @@ const EditPost = ({ postId, postData }) => {
       <h1 className='text-2xl font-bold py-4'>Edit Blog Post</h1>
 
       {previewMode ? (
-        <div>
-          {/* Add your preview view here */}
-          <h2 className='text-[24px] font-bold my-2'>{post.title}</h2>
+        <div className='mr-48'>
+          <h2 className='text-[30px] font-bold my-2'>{post.title}</h2>
           <p className='text-[18px] text-gray-600 font-medium my-2'>
             {post.author}
           </p>
           <p className='my-4' ref={contentRef} onMouseUp={handleTextSelection}>
             <Highlight
-              matchStyle={{ backgroundColor: 'pink' }}
+              matchStyle={{ backgroundColor: '#b8e2f6' }}
               search={highlightedText
                 .map((segment) =>
                   post.content.slice(segment.start, segment.end)
@@ -488,7 +487,7 @@ const EditPost = ({ postId, postData }) => {
         </div>
       )}
 
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'absolute' }}>
         {isToolbarOpen && (
           <Toolbar
             postId={postId}

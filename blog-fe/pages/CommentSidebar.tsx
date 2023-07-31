@@ -15,10 +15,12 @@ const CommentSidebar = ({ comment, onClick, isSelected, start, end }) => {
       className={`comment-sidebar ${isSelected ? 'selected' : ''}`}
       onClick={handleCommentClick}
     >
-      <p className='comment-author'>{comment.author}</p>
-      <p className='comment-time'>
-        <TimeAgo datetime={comment.date} />
-      </p>
+      <div className='flex gap-4'>
+        <p className='comment-author'>{comment.author}</p>
+        <p className='comment-time'>
+          <TimeAgo datetime={comment.date} />
+        </p>
+      </div>
       <p className='comment-content'>{comment.content}</p>
     </div>
   );

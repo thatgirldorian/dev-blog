@@ -34,17 +34,15 @@ const Toolbar = ({
   };
 
   return (
-    <div className='toolbar bg-white rounded border border-gray-200 shadow-md mx-4'>
+    <div className='toolbar bg-white rounded border border-gray-200 mx-4'>
       <button className='px-3 py-2 border-r border-gray-200'>Save</button>
-      <button className='px-3 py-2 border-r border-gray-200'>
-        Save as Draft
-      </button>
+
       <button className='px-3 py-2 border-r border-gray-200'>
         Toggle Preview
       </button>
       <button
         onClick={() => handleAddCommentClick()} // Call the handleAddCommentClick function
-        className='px-3 py-2 border-r border-gray-200'
+        className='px-3 py-2'
       >
         Add Comment
       </button>
