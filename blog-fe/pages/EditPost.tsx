@@ -478,6 +478,7 @@ const EditPost = ({ postId, postData }) => {
               position: 'absolute',
               top: toolbarPosition.top,
               left: toolbarPosition.left,
+              paddingBottom: '50px',
             }}
           />
         )}
