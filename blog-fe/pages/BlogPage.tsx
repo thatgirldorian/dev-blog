@@ -3,6 +3,7 @@ import { BlogContext } from './contexts/BlogContext';
 import { fetchBlogPosts } from './api/posts';
 import EditPost from './EditPost';
 import { Header } from './Header';
+import { AuthorCard } from './AuthorCard';
 
 import Link from 'next/link';
 
@@ -36,41 +37,36 @@ export const BlogPage = () => {
   };
 
   return (
-    <div className='p-4 mt-12'>
+    <div className='mt-12'>
       <Header />
-      <p>Hi! I'm writing about front-end development and learning in public.</p>
-      <div className='flex gap-32'>
-        <h1 className='text-2xl font-bold'>Read our blog</h1>
-        <button className='bg-green-500 text-white px-4 py-2 rounded'>
-          Create post
-        </button>
+      <AuthorCard />
+      <div className='p-4'>
+        <ul className='flex flex-wrap -mx-4'>
+          {blogData.map((post) => (
+            <li
+              key={post._id}
+              className='border rounded border-gray-500 w-full sm:w-1/2 sm:mb-0 sm:px-4 p-4 mt-4 ml-4 max-w-[550px]'
+            >
+              <h2 className='text-lg font-bold mb-2'>{post.title}</h2>
+              <p className='mb-4'>{truncateContent(post.content, 25)}</p>
+              <p>Author: {post.author}</p>
+              <p>Date: {post.date}</p>
+              <div className='flex gap-8 mt-4'>
+                <Link
+                  href={`/edit/${post._id}`}
+                  passHref
+                  className='bg-blue-500 text-white px-4 py-2 rounded'
+                >
+                  Edit
+                </Link>
+                <button className='bg-red-500 text-white px-4 py-2 rounded'>
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
-
-      <ul className='flex flex-wrap -mx-4'>
-        {blogData.map((post) => (
-          <li
-            key={post._id}
-            className='border rounded border-gray-500 w-full sm:w-1/2 sm:mb-0 sm:px-4 p-4 mt-4 ml-4 max-w-[550px]'
-          >
-            <h2 className='text-lg font-bold mb-2'>{post.title}</h2>
-            <p className='mb-4'>{truncateContent(post.content, 25)}</p>
-            <p>Author: {post.author}</p>
-            <p>Date: {post.date}</p>
-            <div className='flex gap-8 mt-4'>
-              <Link
-                href={`/edit/${post._id}`}
-                passHref
-                className='bg-blue-500 text-white px-4 py-2 rounded'
-              >
-                Edit
-              </Link>
-              <button className='bg-red-500 text-white px-4 py-2 rounded'>
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
 
       {/* Render the EditPost component with the selected blog post data */}
       {selectedPost && <EditPost postData={selectedPost} />}

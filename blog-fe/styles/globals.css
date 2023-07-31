@@ -7,9 +7,8 @@ header {
   color: white;
 }
 
-.header-icon {
-  color: white;
-  fill: white;
+.author-card {
+  background-color: #f8e7ee;
 }
 
 .textarea-input {
