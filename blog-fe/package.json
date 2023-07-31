@@ -20,6 +20,7 @@
     "timeago-react": "^3.0.6"
   },
   "devDependencies": {
+    "@types/intl": "^1.2.0",
     "@types/node": "18.7.5",
     "@types/react": "16.9.17",
     "autoprefixer": "^10.4.14",
