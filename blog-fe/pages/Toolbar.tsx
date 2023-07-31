@@ -1,24 +1,7 @@
 import React, { useState } from 'react';
 import CommentDialog from './CommentDialog';
 
-interface ToolbarProps {
-  postId: string;
-  handleAddComment: (
-    content: string,
-    author: string,
-    start: number,
-    end: number
-  ) => void;
-  start: number;
-  end: number;
-}
-
-const Toolbar: React.FC<ToolbarProps> = ({
-  postId,
-  handleAddComment,
-  start,
-  end,
-}) => {
+const Toolbar = ({ postId, handleAddComment, start, end }) => {
   const [showCommentDialog, setShowCommentDialog] = useState(false);
 
   const [commentContent, setCommentContent] = useState(''); // State to store the comment content

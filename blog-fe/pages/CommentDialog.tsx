@@ -1,21 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-interface CommentDialogProps {
-  onClose: () => void;
-  onSubmit: () => void;
-  postId: string;
-  start: number;
-  end: number;
-}
-
-const CommentDialog: React.FC<CommentDialogProps> = ({
-  onClose,
-  onSubmit,
-  postId,
-  start,
-  end,
-}) => {
+const CommentDialog = ({ onClose, postId, onSubmit, start, end }) => {
   const [commentContent, setCommentContent] = useState('');
   const [authorName, setAuthorName] = useState('');
 

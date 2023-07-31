@@ -106,9 +106,7 @@ export const BlogPage = () => {
           </ul>
         </div>
 
-        {selectedPost && (
-          <EditPost postData={selectedPost} postId={undefined} />
-        )}
+        {selectedPost && <EditPost postData={selectedPost} />}
         <Footer />
       </main>
     </>
