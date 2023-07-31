@@ -30,7 +30,7 @@ export const BlogPage = () => {
     return <div>Loading...</div>;
   }
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string | number | Date) => {
     const options = {
       year: 'numeric',
       month: 'long',
