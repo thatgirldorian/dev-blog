@@ -1,6 +1,6 @@
 import { useEffect, useContext, useState } from 'react';
 import { BlogContext } from './contexts/BlogContext';
-import { BlogPost, BlogContextType } from './contexts/BlogTypes';
+import { BlogPost } from './contexts/BlogTypes';
 import { DateTimeFormatOptions } from 'intl';
 
 import { fetchBlogPosts } from './api/posts';
@@ -15,7 +15,7 @@ import { Footer } from './Footer';
 
 export const BlogPage = () => {
   const { blogData, setBlogData } = useContext(BlogContext);
-  const [selectedPost, setSelectedPost] = useState(null);
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
 
   useEffect(() => {
     // Fetch the blog post data when the component mounts
@@ -107,7 +107,7 @@ export const BlogPage = () => {
         </div>
 
         {selectedPost && (
-          <EditPost postData={selectedPost} postId={undefined} />
+          <EditPost postData={selectedPost} postId={selectedPost._id} />
         )}
         <Footer />
       </main>
