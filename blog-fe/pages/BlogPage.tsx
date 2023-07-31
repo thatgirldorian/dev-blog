@@ -1,6 +1,7 @@
 import { useEffect, useContext, useState } from 'react';
 import { BlogContext } from './contexts/BlogContext';
-import { BlogPost, BlogContextType } from './contexts/BlogTypes'; // Correct import statement
+import { BlogPost, BlogContextType } from './contexts/BlogTypes';
+import { DateTimeFormatOptions } from 'node:intl';
 
 import { fetchBlogPosts } from './api/posts';
 import EditPost from './EditPost';
@@ -31,7 +32,7 @@ export const BlogPage = () => {
   }
 
   const formatDate = (dateString: string | number | Date) => {
-    const options = {
+    const options: DateTimeFormatOptions = {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -40,7 +41,7 @@ export const BlogPage = () => {
     return date.toLocaleString('en-US', options);
   };
 
-  const truncateContent = (content, wordLimit) => {
+  const truncateContent = (content: string, wordLimit: number) => {
     const words = content.split(' ');
     const truncatedContent = words.slice(0, wordLimit).join(' ');
 
