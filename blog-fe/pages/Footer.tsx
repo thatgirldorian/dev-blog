@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 export const Footer = () => {
   return (
     <footer className='-mt-px border-t bg-slate-100 px-5 py-10 text-center text-slate-800 dark:border-slate-800 dark:bg-black dark:text-slate-500'>

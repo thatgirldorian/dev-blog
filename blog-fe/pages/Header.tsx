@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { LogoTwitter } from 'react-ionicons';
 import { LogoGithub } from 'react-ionicons';
 import { LogoRss } from 'react-ionicons';

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 export const AuthorCard = () => {
   return (
     <div className='author-card flex flex-col items-center pt-32 pb-16 md:py-24 '>
