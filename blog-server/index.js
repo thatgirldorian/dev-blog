@@ -11,7 +11,7 @@ const Comment = require('./models/commentModel');
 
 const app = express();
 // Enable CORS
-app.use(cors());
+app.use(cors('*'));
 
 // Set up MongoDB connection
 const mongoURI = process.env.MONGODB_URI;

@@ -11,7 +11,9 @@ const imageFileNames = [
 
 export async function fetchBlogPosts() {
   try {
-    const response = await fetch('http://localhost:5001/api/posts');
+    const response = await fetch(
+      'https://dev-blog-server-9x8gfynqb-thatgirldorian.vercel.app/api/posts'
+    );
     const data = await response.json();
 
     // Update the data to include the imageFileName for each post
@@ -28,20 +30,25 @@ export async function fetchBlogPosts() {
 }
 
 export async function fetchBlogPostById(postId) {
-  const response = await fetch(`http://localhost:5001/api/posts/${postId}`);
+  const response = await fetch(
+    `https://dev-blog-server-9x8gfynqb-thatgirldorian.vercel.app/api/posts/${postId}`
+  );
   const data = await response.json();
   return data;
 }
 
 export async function updateBlogPost(postId, postData) {
   try {
-    const response = await fetch(`http://localhost:5001/api/posts/${postId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(postData),
-    });
+    const response = await fetch(
+      `https://dev-blog-server-9x8gfynqb-thatgirldorian.vercel.app/api/posts/${postId}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      }
+    );
     const data = await response.json();
     return data;
   } catch (error) {
@@ -54,7 +61,7 @@ export async function updateBlogPost(postId, postData) {
 export const fetchCommentsByPostId = async (postId) => {
   try {
     const response = await axios.get(
-      `http://localhost:5001/api/posts/${postId}/comments`
+      `https://dev-blog-server-9x8gfynqb-thatgirldorian.vercel.app/api/posts/${postId}/comments`
     );
     return response.data;
   } catch (error) {

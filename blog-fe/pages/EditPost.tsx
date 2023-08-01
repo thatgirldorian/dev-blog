@@ -64,7 +64,7 @@ const EditPost = ({ postId, postData }) => {
     async function fetchComments() {
       try {
         const response = await axios.get(
-          `http://localhost:5001/api/posts/${postId}/comments`
+          `https://dev-blog-server-9x8gfynqb-thatgirldorian.vercel.app/api/posts/${postId}/comments`
         );
         dispatch({
           type: 'SET_COMMENTS',
@@ -246,7 +246,7 @@ const EditPost = ({ postId, postData }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5001/api/posts/${postId}/comments`,
+        `https://dev-blog-server-9x8gfynqb-thatgirldorian.vercel.app/api/posts/${postId}/comments`,
         {
           ...commentData,
           start: start,
@@ -296,7 +296,7 @@ const EditPost = ({ postId, postData }) => {
     try {
       // Fetch the comments for the highlighted section
       const response = await axios.get(
-        `http://localhost:5001/api/posts/${postId}/highlight/${start}/${end}`
+        `https://dev-blog-server-9x8gfynqb-thatgirldorian.vercel.app/api/posts/${postId}/highlight/${start}/${end}`
       );
 
       const highlightedComments = response.data;

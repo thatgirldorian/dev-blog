@@ -1,7 +1,7 @@
 export async function fetchComments(postId) {
   try {
     const response = await fetch(
-      `http://localhost:5001/api/posts/${postId}/comments`
+      `https://dev-blog-server-9x8gfynqb-thatgirldorian.vercel.app/api/posts/${postId}/comments`
     );
     const data = await response.json();
     return data;
@@ -14,7 +14,7 @@ export async function fetchComments(postId) {
 export async function addComment(postId, commentData) {
   try {
     const response = await fetch(
-      `http://localhost:5001/api/posts/${postId}/comments`,
+      `https://dev-blog-server-9x8gfynqb-thatgirldorian.vercel.app/api/posts/${postId}/comments`,
       {
         method: 'POST',
         headers: {
