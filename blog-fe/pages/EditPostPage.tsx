@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { fetchBlogPostById } from './api/posts';
+import { fetchBlogPostById } from './api/blogPosts';
 import EditPost from './EditPost';
 
 const EditPostPage = () => {

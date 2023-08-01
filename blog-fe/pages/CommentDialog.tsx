@@ -24,7 +24,7 @@ const CommentDialog = ({ onClose, postId, onSubmit, start, end }) => {
       };
 
       const response = await axios.post(
-        `https://dev-blog-server-9x8gfynqb-thatgirldorian.vercel.app/api/posts/${postId}/comments`,
+        `/api/posts/${postId}/comments`,
         commentData
       );
 

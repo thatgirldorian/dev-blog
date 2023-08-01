@@ -5,7 +5,7 @@ import BlogContext from '../contexts/BlogContext';
 import { BlogPost, BlogContextType } from '../contexts/BlogTypes';
 import { DateTimeFormatOptions } from 'intl';
 
-import { fetchBlogPosts } from './api/posts';
+import { fetchBlogPosts } from '../pages/api/blogPosts';
 import EditPost from './EditPost';
 import Header from './Header';
 import AuthorCard from './AuthorCard';

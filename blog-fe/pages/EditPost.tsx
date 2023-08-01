@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useContext, useRef, useReducer } from 'react';
 import { useRouter } from 'next/router';
-import { fetchBlogPostById, updateBlogPost } from '../pages/api/posts';
+import { fetchBlogPostById, updateBlogPost } from './api/blogPosts';
 import BlogContext from '../contexts/BlogContext';
 const Highlight = require('react-highlighter');
 
@@ -63,9 +63,7 @@ const EditPost = ({ postId, postData }) => {
     // Fetch the comments for the post by its ID when the component mounts
     async function fetchComments() {
       try {
-        const response = await axios.get(
-          `https://dev-blog-server-9x8gfynqb-thatgirldorian.vercel.app/api/posts/${postId}/comments`
-        );
+        const response = await axios.get(`/api/posts/${postId}/comments`);
         dispatch({
           type: 'SET_COMMENTS',
           payload: response.data,
@@ -245,14 +243,11 @@ const EditPost = ({ postId, postData }) => {
     };
 
     try {
-      const response = await axios.post(
-        `https://dev-blog-server-9x8gfynqb-thatgirldorian.vercel.app/api/posts/${postId}/comments`,
-        {
-          ...commentData,
-          start: start,
-          end: end,
-        }
-      );
+      const response = await axios.post(`/api/posts/${postId}/comments`, {
+        ...commentData,
+        start: start,
+        end: end,
+      });
 
       const newComment = response.data;
 
@@ -296,7 +291,7 @@ const EditPost = ({ postId, postData }) => {
     try {
       // Fetch the comments for the highlighted section
       const response = await axios.get(
-        `https://dev-blog-server-9x8gfynqb-thatgirldorian.vercel.app/api/posts/${postId}/highlight/${start}/${end}`
+        `/api/posts/${postId}/highlight/${start}/${end}`
       );
 
       const highlightedComments = response.data;

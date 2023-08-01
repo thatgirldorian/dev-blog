@@ -1,6 +1,4 @@
-const req = require('express/lib/request');
 const mongoose = require('mongoose');
-const Comment = require('./commentModel');
 
 const postSchema = new mongoose.Schema({
   _id: { type: String, default: () => mongoose.Types.ObjectId().toString() },
@@ -20,6 +18,4 @@ const postSchema = new mongoose.Schema({
   ],
 });
 
-const Post = mongoose.model('Post', postSchema);
-
-module.exports = Post;
+export default mongoose.models?.Post || mongoose.model('Post', postSchema);
