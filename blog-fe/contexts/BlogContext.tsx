@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import { createContext, useState, useEffect } from 'react';
-import { fetchBlogPosts } from '../api/posts';
+import { fetchBlogPosts } from '../pages/api/posts';
 import { BlogPost, BlogContextType } from './BlogTypes';
 
 const BlogContext = createContext<BlogContextType>({

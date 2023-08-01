@@ -1,8 +1,8 @@
 // @ts-nocheck
 
 import { useEffect, useContext, useState } from 'react';
-import BlogContext from './contexts/BlogContext';
-import { BlogPost, BlogContextType } from './contexts/BlogTypes';
+import BlogContext from '../contexts/BlogContext';
+import { BlogPost, BlogContextType } from '../contexts/BlogTypes';
 import { DateTimeFormatOptions } from 'intl';
 
 import { fetchBlogPosts } from './api/posts';
