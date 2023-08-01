@@ -1,21 +1,21 @@
 // @ts-nocheck
 
 import { useEffect, useContext, useState } from 'react';
-import { BlogContext } from './contexts/BlogContext';
+import BlogContext from './contexts/BlogContext';
 import { BlogPost, BlogContextType } from './contexts/BlogTypes';
 import { DateTimeFormatOptions } from 'intl';
 
 import { fetchBlogPosts } from './api/posts';
 import EditPost from './EditPost';
-import { Header } from './Header';
-import { AuthorCard } from './AuthorCard';
+import Header from './Header';
+import AuthorCard from './AuthorCard';
 import { PencilOutline } from 'react-ionicons';
-import { Button } from './Button';
+import Button from './Button';
 
 import Link from 'next/link';
-import { Footer } from './Footer';
+import Footer from './Footer';
 
-export const BlogPage = () => {
+const BlogPage = () => {
   const { blogData, setBlogData } = useContext(BlogContext);
   const [selectedPost, setSelectedPost] = useState(null);
 
@@ -116,3 +116,5 @@ export const BlogPage = () => {
     </>
   );
 };
+
+export default BlogPage;

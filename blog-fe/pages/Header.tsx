@@ -5,7 +5,7 @@ import { LogoGithub } from 'react-ionicons';
 import { LogoRss } from 'react-ionicons';
 import { Newspaper } from 'react-ionicons';
 
-export const Header = () => {
+const Header = () => {
   return (
     <header className='flex px-32 header flex-col md:flex-row justify-between items-center py-[16px]  z-50 w-full border-b relative border-transparent md:border-none'>
       <div className='flex items-center md:pb-0 pb-4'>
@@ -62,3 +62,5 @@ export const Header = () => {
     </header>
   );
 };
+
+export default Header;

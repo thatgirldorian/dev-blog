@@ -3,14 +3,14 @@
 import { useState, useEffect, useContext, useRef, useReducer } from 'react';
 import { useRouter } from 'next/router';
 import { fetchBlogPostById, updateBlogPost } from '../pages/api/posts';
-import { BlogContext } from './contexts/BlogContext';
+import BlogContext from './contexts/BlogContext';
 const Highlight = require('react-highlighter');
 
 import Toolbar from './Toolbar';
 import CommentSidebar from './CommentSidebar';
 import axios from 'axios';
 import commentsReducer from '../reducers/commentsReducer';
-import { Button } from './Button';
+import Button from './Button';
 import { ArrowBack } from 'react-ionicons';
 
 const EditPost = ({ postId, postData }) => {

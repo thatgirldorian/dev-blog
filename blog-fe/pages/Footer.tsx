@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-export const Footer = () => {
+const Footer = () => {
   return (
     <footer className='-mt-px border-t bg-slate-100 px-5 py-10 text-center text-slate-800 dark:border-slate-800 dark:bg-black dark:text-slate-500'>
       <p className='text-[#475569]'> &#169; 2023 Code Chunks</p>
@@ -8,3 +8,5 @@ export const Footer = () => {
     </footer>
   );
 };
+
+export default Footer;

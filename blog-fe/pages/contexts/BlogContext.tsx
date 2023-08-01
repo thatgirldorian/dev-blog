@@ -4,7 +4,7 @@ import { createContext, useState, useEffect } from 'react';
 import { fetchBlogPosts } from '../api/posts';
 import { BlogPost, BlogContextType } from './BlogTypes';
 
-export const BlogContext = createContext<BlogContextType>({
+const BlogContext = createContext<BlogContextType>({
   blogData: [],
   setBlogData: () => {},
 });
@@ -26,3 +26,5 @@ export const BlogProvider: React.FC = ({ children }) => {
     </BlogContext.Provider>
   );
 };
+
+export default BlogContext;
