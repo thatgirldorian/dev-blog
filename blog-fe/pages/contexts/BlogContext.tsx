@@ -1,5 +1,3 @@
-// contexts/BlogContext.tsx
-
 import { createContext, useState, useEffect } from 'react';
 import { fetchBlogPosts } from '../api/posts';
 import { BlogPost, BlogContextType } from './BlogTypes';
