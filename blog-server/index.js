@@ -23,6 +23,10 @@ mongoose.connect(mongoURI, {
 // Middleware
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.json('Hello world');
+});
+
 // Register API routes
 app.use('/api', postsRoute);
 app.use('/api', commentsRoute);
