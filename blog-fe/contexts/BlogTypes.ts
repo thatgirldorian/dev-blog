@@ -1,3 +1,13 @@
+export interface BlogComment {
+  _id: string;
+  postId: string;
+  author: string;
+  content: string;
+  start: number;
+  end: number;
+  date: string;
+}
+
 export interface BlogPost {
   _id: string;
   title: string;

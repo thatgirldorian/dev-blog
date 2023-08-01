@@ -19,9 +19,20 @@ const EditPost = ({ postId, postData }) => {
   const [comments, dispatch] = useReducer(commentsReducer, []);
 
   const { blogData, setBlogData } = useContext(BlogContext);
-  const [post, setPost] = useState(postData);
+
   const [previewMode, setPreviewMode] = useState(false);
   const [highlightedText, setHighlightedText] = useState([]);
+  const [post, setPost] = useState(
+    postData?.title
+      ? postData
+      : {
+          title: '',
+          content: '',
+          author: '',
+          draft: false,
+          comments: [],
+        }
+  );
 
   const [isToolbarOpen, setIsToolbarOpen] = useState(false);
   const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });

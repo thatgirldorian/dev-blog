@@ -2,8 +2,21 @@
 
 import React from 'react';
 import TimeAgo from 'timeago-react';
+import { BlogComment } from '../contexts/BlogTypes';
 
-const CommentSidebar = ({ comment, onClick, isSelected, start, end }) => {
+interface CommentSidebarProps {
+  comment: BlogComment;
+  onClick: (comment: BlogComment) => void;
+  isSelected: boolean;
+}
+
+const CommentSidebar: React.FC<CommentSidebarProps> = ({
+  comment,
+  onClick,
+  isSelected,
+  start,
+  end,
+}) => {
   const handleCommentClick = (event) => {
     // Prevent the event from propagating to the parent elements
     event.stopPropagation();
