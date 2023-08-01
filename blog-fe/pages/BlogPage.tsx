@@ -72,24 +72,24 @@ const BlogPage = () => {
                   className='rounded-md'
                 />
                 <h2 className='text-[30px] font-bold my-4 leading-[1.2]'>
-                  {post.title}
+                  {post?.title}
                 </h2>
                 <div className='blog-post-info flex gap-4 my-4'>
                   <p className='text-[14px] text-[#64748b] font-semibold '>
-                    {post.author}
+                    {post?.author}
                   </p>
                   <p className='text-[14px] text-[#64748b] font-medium flex items-center'>
                     <span className='mr-2'>&#8226;</span>
-                    {formatDate(post.date)}
+                    {formatDate(post?.date)}
                   </p>
                 </div>
 
                 <p className=' text-[18px] mb-4'>
-                  {truncateContent(post.content, 25)}
+                  {truncateContent(post?.content, 25)}
                 </p>
 
                 <div className='flex gap-8 mt-4'>
-                  <Link href={`/edit/${post._id}`} passHref>
+                  <Link href={`/edit/${post?._id}`} passHref>
                     <Button
                       icon={
                         <PencilOutline

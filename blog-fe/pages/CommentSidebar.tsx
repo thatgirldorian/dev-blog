@@ -6,8 +6,10 @@ import { BlogComment } from '../contexts/BlogTypes';
 
 interface CommentSidebarProps {
   comment: BlogComment;
-  onClick: (comment: BlogComment) => void;
+  onClick: (comment: BlogComment, start: number, end: number) => void;
   isSelected: boolean;
+  start: number;
+  end: number;
 }
 
 const CommentSidebar: React.FC<CommentSidebarProps> = ({
@@ -30,12 +32,12 @@ const CommentSidebar: React.FC<CommentSidebarProps> = ({
       onClick={handleCommentClick}
     >
       <div className='flex gap-4'>
-        <p className='comment-author'>{comment.author}</p>
+        <p className='comment-author'>{comment?.author}</p>
         <p className='comment-time'>
-          <TimeAgo datetime={comment.date} />
+          <TimeAgo datetime={comment?.date} />
         </p>
       </div>
-      <p className='comment-content'>{comment.content}</p>
+      <p className='comment-content'>{comment?.content}</p>
     </div>
   );
 };
