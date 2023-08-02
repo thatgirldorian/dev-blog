@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useContext, useRef, useReducer } from 'react';
 import { useRouter } from 'next/router';
-import { fetchBlogPostById, updateBlogPost } from './api/blogPosts';
+// import { fetchBlogPostById, updateBlogPost } from './api/blogPosts';
 import BlogContext from '../contexts/BlogContext';
 const Highlight = require('react-highlighter');
 
@@ -46,33 +46,33 @@ const EditPost = ({ postId, postData }) => {
 
   useEffect(() => {
     // Fetch the blog post data by its ID when the component mounts
-    async function fetchPost() {
-      const postData = await fetchBlogPostById(postId);
-      setPost({
-        title: postData.title,
-        content: postData.content,
-        author: postData.author,
-        draft: postData.draft,
-        comments: postData.comments || [],
-      });
-    }
-    fetchPost();
+    // async function fetchPost() {
+    //   const postData = await fetchBlogPostById(postId);
+    //   setPost({
+    //     title: postData.title,
+    //     content: postData.content,
+    //     author: postData.author,
+    //     draft: postData.draft,
+    //     comments: postData.comments || [],
+    //   });
+    // }
+    // fetchPost();
   }, [postId]);
 
   useEffect(() => {
     // Fetch the comments for the post by its ID when the component mounts
-    async function fetchComments() {
-      try {
-        const response = await axios.get(`/api/posts/${postId}/comments`);
-        dispatch({
-          type: 'SET_COMMENTS',
-          payload: response.data,
-        });
-      } catch (error) {
-        console.error('Error fetching comments:', error);
-      }
-    }
-    fetchComments();
+    // async function fetchComments() {
+    //   try {
+    //     const response = await axios.get(`/api/posts/${postId}/comments`);
+    //     dispatch({
+    //       type: 'SET_COMMENTS',
+    //       payload: response.data,
+    //     });
+    //   } catch (error) {
+    //     console.error('Error fetching comments:', error);
+    //   }
+    // }
+    // fetchComments();
   }, [postId, comments]);
 
   const highlightText = (start, end) => {
@@ -194,8 +194,8 @@ const EditPost = ({ postId, postData }) => {
       router.push('/');
 
       //update the blog data in the context with the edited data
-      setBlogData((prevBlogData: { _id: any }[]) => {
-        const updatedBlogData = prevBlogData.map((postItem: { _id: any }) => {
+      setBlogData((prevBlogData) => {
+        const updatedBlogData = prevBlogData.map((postItem) => {
           if (postItem._id === postId) {
             return { ...postItem, ...post };
           }
@@ -215,12 +215,12 @@ const EditPost = ({ postId, postData }) => {
   const handleSaveAsDraft = async () => {
     try {
       // Send the draft post data to the backend
-      await updateBlogPost(postId, {
-        title: post.title,
-        content: post.content,
-        author: post.author,
-        draft: true, // Set the draft status to true for saving as draft
-      });
+      //   await updateBlogPost(postId, {
+      //     title: post.title,
+      //     content: post.content,
+      //     author: post.author,
+      //     draft: true, // Set the draft status to true for saving as draft
+      //   });
     } catch (error) {
       console.error('Error saving blog post as draft:', error);
     }

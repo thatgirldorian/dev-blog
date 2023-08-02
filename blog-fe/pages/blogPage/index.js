@@ -1,40 +1,56 @@
 // @ts-nocheck
 
 import { useEffect, useContext, useState } from 'react';
-import BlogContext from '../contexts/BlogContext';
-import { BlogPost, BlogContextType } from '../contexts/BlogTypes';
+import BlogContext from '../../contexts/BlogContext';
+import { BlogPost, BlogContextType } from '../../contexts/BlogTypes';
 import { DateTimeFormatOptions } from 'intl';
 
-import { fetchBlogPosts } from '../pages/api/blogPosts';
-import EditPost from './EditPost';
-import Header from './Header';
-import AuthorCard from './AuthorCard';
+import EditPost from '../../components/EditPost';
+import Header from '../../components/Header';
+import AuthorCard from '../../components/AuthorCard';
 import { PencilOutline } from 'react-ionicons';
-import Button from './Button';
+import Button from '../../components/Button';
 
 import Link from 'next/link';
-import Footer from './Footer';
+import Footer from '../../components/Footer';
+import { useRouter } from 'next/router';
 
 const BlogPage = () => {
+  const router = useRouter();
   const { blogData, setBlogData } = useContext(BlogContext);
   const [selectedPost, setSelectedPost] = useState(null);
 
+  const handleEditPost = (postId) => {
+    // Set the selectedPost state when the "Edit Post" button is clicked
+    const selectedPost = blogData.find((post) => post._id === postId);
+    setSelectedPost(selectedPost);
+  };
+
   useEffect(() => {
     // Fetch the blog post data when the component mounts
-    async function fetchData() {
-      const data = await fetchBlogPosts();
-
-      setBlogData(data);
-    }
-    fetchData();
+    fetchBlogPost();
   }, []);
+
+  const fetchBlogPost = async () => {
+    try {
+      const data = await fetch(`/api/posts`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((res) => res.json());
+      setBlogData(data);
+    } catch (error) {
+      console.error('Error fetching blog post:', error);
+    }
+  };
 
   if (!blogData.length) {
     return <div>Loading...</div>;
   }
 
-  const formatDate = (dateString: string | number | Date) => {
-    const options: DateTimeFormatOptions = {
+  const formatDate = (dateString) => {
+    const options = {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -43,7 +59,7 @@ const BlogPage = () => {
     return date.toLocaleString('en-US', options);
   };
 
-  const truncateContent = (content: string, wordLimit: number) => {
+  const truncateContent = (content, wordLimit) => {
     const words = content.split(' ');
     const truncatedContent = words.slice(0, wordLimit).join(' ');
 
@@ -89,19 +105,20 @@ const BlogPage = () => {
                 </p>
 
                 <div className='flex gap-8 mt-4'>
-                  <Link href={`/edit/${post?._id}`} passHref>
-                    <Button
-                      icon={
-                        <PencilOutline
-                          height='16px'
-                          width='16px'
-                          style={{ color: 'white' }}
-                        />
-                      }
-                      text='Edit Post'
-                      className='text-white border-rounded bg-blue-500'
-                    />
-                  </Link>
+                  <Button
+                    icon={
+                      <PencilOutline
+                        height='16px'
+                        width='16px'
+                        style={{ color: 'white' }}
+                      />
+                    }
+                    onClick={() => {
+                      router.push(`/blogPage/${post?._id}`);
+                    }}
+                    text='Edit Post'
+                    className='text-white border-rounded bg-blue-500'
+                  />
                 </div>
               </li>
             ))}
