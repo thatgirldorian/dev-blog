@@ -1,7 +1,12 @@
 // @ts-nocheck
 
-import BlogPage from './BlogPage';
+import { useRouter } from 'next/router';
+import { Fragment, useEffect } from 'react';
 
 export default function Home() {
-  return <BlogPage />;
+  const router = useRouter();
+  useEffect(() => {
+    router.push('/blogPage');
+  }, []);
+  return <Fragment />;
 }
