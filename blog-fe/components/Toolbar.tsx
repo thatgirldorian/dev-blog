@@ -16,9 +16,7 @@ const Toolbar = ({
   const [authorName, setAuthorName] = useState(''); // State to store the author name
 
   const handleSubmit = () => {
-    console.log('before submit');
     handleAddComment(commentContent, authorName, start, end);
-    console.log('after submit');
 
     // Clear the comment input after submission
     setCommentContent('');

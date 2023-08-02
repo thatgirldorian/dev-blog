@@ -11,6 +11,10 @@ header {
   background-color: #f8e7ee;
 }
 
+.edit-page {
+  margin-bottom: 20px !important;
+}
+
 .textarea-input {
   min-height: 450px;
 }

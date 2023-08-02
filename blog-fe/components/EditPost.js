@@ -238,13 +238,11 @@ const EditPost = ({ postId, postData }) => {
     };
 
     try {
-      console.log('before');
       const { data } = await axios.post(`/api/posts/${postId}/comments`, {
         ...commentData,
         start: start,
         end: end,
       });
-      console.log('Should render comments now.');
 
       // Update the comments state with the new comment
 
@@ -272,7 +270,6 @@ const EditPost = ({ postId, postData }) => {
         },
       });
     } catch (error) {
-      console.log('after error');
       console.error('Error adding comment:', error);
     }
   };
@@ -329,7 +326,7 @@ const EditPost = ({ postId, postData }) => {
   }, []);
 
   return (
-    <div className='max-w-[950px] mx-auto my-auto sm:my-0 mt-12 px-4 sm:px-16 relative'>
+    <div className='max-w-[950px] edit-page mx-auto my-auto sm:my-0 mt-12 px-4 sm:px-16 relative'>
       <div className='flex items-center  justify-between'>
         <Button
           icon={<ArrowBack />}
