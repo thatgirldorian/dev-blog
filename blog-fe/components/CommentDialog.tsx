@@ -3,12 +3,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const CommentDialog = ({ onClose, postId, onSubmit, start, end }) => {
+const CommentDialog = ({
+  onClose,
+  postId,
+  onSubmit,
+  start,
+  end,
+  setShouldReRenderComments,
+}) => {
   const [commentContent, setCommentContent] = useState('');
   const [authorName, setAuthorName] = useState('');
 
   const handleCommentSubmit = async () => {
-    if (!commentContent || !authorName || !start || !end) {
+    if (commentContent == '' || authorName == '') {
       console.error('Comment data is incomplete');
       return;
     }
@@ -27,7 +34,7 @@ const CommentDialog = ({ onClose, postId, onSubmit, start, end }) => {
         `/api/posts/${postId}/comments`,
         commentData
       );
-
+      setShouldReRenderComments(true);
       // Reset the commentContent & authorName state after submission
       setCommentContent('');
       setAuthorName('');

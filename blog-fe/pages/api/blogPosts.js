@@ -39,23 +39,6 @@ export async function fetchBlogPostById(postId) {
   }
 }
 
-// export async function fetchBlogPostById(postId) {
-//   const response = await axios.get(`/api/posts/${postId}`);
-//   const data = response.data;
-//   return data;
-// }
-
-export async function updateBlogPost(postId, postData) {
-  try {
-    const response = await axios.put(`/api/posts/${postId}`, postData);
-    const data = response.data;
-    return data;
-  } catch (error) {
-    console.error('Error updating blog post:', error);
-    throw error;
-  }
-}
-
 // Fetches comment for a specific post by its postId
 export const fetchCommentsByPostId = async (postId) => {
   try {

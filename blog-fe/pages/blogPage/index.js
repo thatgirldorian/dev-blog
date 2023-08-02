@@ -83,7 +83,9 @@ const BlogPage = () => {
                 className='border-gray-500 sm:w-full sm:mb-0 sm:px-4 p-4 max-w-[550px] my-2'
               >
                 <img
-                  src={`/images/${post.imageFileName}`}
+                  src={
+                    post.imageFileName ? `/images/${post.imageFileName}` : ''
+                  }
                   alt='Blog Post'
                   className='rounded-md'
                 />

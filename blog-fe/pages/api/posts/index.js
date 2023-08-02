@@ -11,7 +11,6 @@ export default async function handler(req, res) {
       try {
         // Fetch all blog posts from the database
         const blogPosts = await Post.find();
-        console.log({ blogPosts });
         // Return the blog post data as JSON response
         res.status(200).json(blogPosts);
       } catch (error) {

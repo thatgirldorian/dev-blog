@@ -3,14 +3,22 @@
 import React, { useState } from 'react';
 import CommentDialog from './CommentDialog';
 
-const Toolbar = ({ postId, handleAddComment, start, end }) => {
+const Toolbar = ({
+  postId,
+  handleAddComment,
+  start,
+  end,
+  setShouldReRenderComments,
+}) => {
   const [showCommentDialog, setShowCommentDialog] = useState(false);
 
   const [commentContent, setCommentContent] = useState(''); // State to store the comment content
   const [authorName, setAuthorName] = useState(''); // State to store the author name
 
   const handleSubmit = () => {
+    console.log('before submit');
     handleAddComment(commentContent, authorName, start, end);
+    console.log('after submit');
 
     // Clear the comment input after submission
     setCommentContent('');
@@ -40,6 +48,7 @@ const Toolbar = ({ postId, handleAddComment, start, end }) => {
           onClose={() => setShowCommentDialog(false)}
           start={start}
           end={end}
+          setShouldReRenderComments={setShouldReRenderComments}
         />
       )}
     </div>

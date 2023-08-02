@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { fetchBlogPostById } from '../../pages/api/blogPosts';
+import { fetchBlogPostById } from '../blogPosts';
 
 export default async function handler(req, res) {
   const { postId } = req.query;
@@ -17,3 +17,4 @@ export default async function handler(req, res) {
     res.status(500).json({ message: 'Error fetching blog post' });
   }
 }
+// localhost:3000/edit/1

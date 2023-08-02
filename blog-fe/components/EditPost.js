@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useContext, useRef, useReducer } from 'react';
 import { useRouter } from 'next/router';
-// import { fetchBlogPostById, updateBlogPost } from './api/blogPosts';
 import BlogContext from '../contexts/BlogContext';
 const Highlight = require('react-highlighter');
 
@@ -41,39 +40,30 @@ const EditPost = ({ postId, postData }) => {
   const [highlightedComment, setHighlightedComment] = useState(null);
   const [start, setStart] = useState();
   const [end, setEnd] = useState();
+  const [shouldReRenderComments, setShouldReRenderComments] = useState(false);
 
   const contentRef = useRef();
 
   useEffect(() => {
-    // Fetch the blog post data by its ID when the component mounts
-    // async function fetchPost() {
-    //   const postData = await fetchBlogPostById(postId);
-    //   setPost({
-    //     title: postData.title,
-    //     content: postData.content,
-    //     author: postData.author,
-    //     draft: postData.draft,
-    //     comments: postData.comments || [],
-    //   });
-    // }
-    // fetchPost();
+    if (postId) fetchComments();
   }, [postId]);
 
   useEffect(() => {
-    // Fetch the comments for the post by its ID when the component mounts
-    // async function fetchComments() {
-    //   try {
-    //     const response = await axios.get(`/api/posts/${postId}/comments`);
-    //     dispatch({
-    //       type: 'SET_COMMENTS',
-    //       payload: response.data,
-    //     });
-    //   } catch (error) {
-    //     console.error('Error fetching comments:', error);
-    //   }
-    // }
-    // fetchComments();
-  }, [postId, comments]);
+    if (postId && shouldReRenderComments) fetchComments();
+  }, [shouldReRenderComments]);
+
+  const fetchComments = async () => {
+    try {
+      const { data } = await axios.get(`/api/posts/${postId}/comments`);
+      setShouldReRenderComments(false);
+      dispatch({
+        type: 'SET_COMMENTS',
+        payload: data,
+      });
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  };
 
   const highlightText = (start, end) => {
     const contentEl = contentRef.current;
@@ -186,13 +176,6 @@ const EditPost = ({ postId, postData }) => {
         author: post.author,
         draft: post.draft,
       });
-
-      if (!post) {
-        return <div>Loading...</div>;
-      }
-
-      router.push('/');
-
       //update the blog data in the context with the edited data
       setBlogData((prevBlogData) => {
         const updatedBlogData = prevBlogData.map((postItem) => {
@@ -203,8 +186,20 @@ const EditPost = ({ postId, postData }) => {
         });
         return updatedBlogData;
       });
+      router.push('/blogPage');
     } catch (error) {
       console.error('Error updating blog post:', error);
+    }
+  };
+
+  const updateBlogPost = async (postId, postData) => {
+    try {
+      const response = await axios.put(`/api/posts/${postId}`, postData);
+      const data = response.data;
+      return data;
+    } catch (error) {
+      console.error('Error updating blog post:', error);
+      throw error;
     }
   };
 
@@ -243,31 +238,24 @@ const EditPost = ({ postId, postData }) => {
     };
 
     try {
-      const response = await axios.post(`/api/posts/${postId}/comments`, {
+      console.log('before');
+      const { data } = await axios.post(`/api/posts/${postId}/comments`, {
         ...commentData,
         start: start,
         end: end,
       });
-
-      const newComment = response.data;
+      console.log('Should render comments now.');
 
       // Update the comments state with the new comment
-      dispatch({
-        type: 'ADD_COMMENT',
-        comment: {
-          ...newComment,
-          start,
-          end,
-        },
-      });
 
+      setShouldReRenderComments(true);
       setHighlightedText((prevHighlightedText) => {
         const updatedHighlightedText = prevHighlightedText.map((segment) => {
           if (
             segment.start === selectedText.start &&
             segment.end === selectedText.end
           ) {
-            return { ...segment, comments: [...segment.comments, newComment] };
+            return { ...segment, comments: [...segment.comments, data] };
           }
           return segment;
         });
@@ -275,7 +263,16 @@ const EditPost = ({ postId, postData }) => {
       });
 
       setIsToolbarOpen(false);
+      dispatch({
+        type: 'ADD_COMMENT',
+        comment: {
+          ...data,
+          start,
+          end,
+        },
+      });
     } catch (error) {
+      console.log('after error');
       console.error('Error adding comment:', error);
     }
   };
@@ -287,27 +284,6 @@ const EditPost = ({ postId, postData }) => {
 
     setStart(start);
     setEnd(end);
-
-    try {
-      // Fetch the comments for the highlighted section
-      const response = await axios.get(
-        `/api/posts/${postId}/highlight/${start}/${end}`
-      );
-
-      const highlightedComments = response.data;
-
-      setHighlightedText((prevHighlightedText) => {
-        const updatedHighlightedText = prevHighlightedText.map((segment) => {
-          if (segment.start === comment.start && segment.end === comment.end) {
-            return { ...segment, comments: highlightedComments };
-          }
-          return segment;
-        });
-        return updatedHighlightedText;
-      });
-    } catch (error) {
-      console.error('Error fetching highlighted comments:', error);
-    }
   };
 
   const calculateToolbarPosition = (mouseX, mouseY) => {
@@ -476,6 +452,7 @@ const EditPost = ({ postId, postData }) => {
           <Toolbar
             postId={postId}
             handleAddComment={handleAddComment}
+            setShouldReRenderComments={setShouldReRenderComments}
             start={start}
             end={end}
             isOpen={isToolbarOpen}

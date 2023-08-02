@@ -25,14 +25,8 @@ const EditPostPage = () => {
   };
 
   useEffect(() => {
-    if (blogPageId) {
-      fetchPost();
-    }
+    if (blogPageId) fetchPost();
   }, [blogPageId]);
-
-  useEffect(() => {
-    console.log({ postData, blogPageId });
-  }, [blogPageId, postData]);
 
   if (!blogPageId || !postData) {
     return <div>Loading...</div>;

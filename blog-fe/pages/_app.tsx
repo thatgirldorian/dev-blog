@@ -6,7 +6,7 @@ import { BlogProvider } from '../contexts/BlogContext';
 function App({ Component, pageProps }: AppProps) {
   return (
     <BlogProvider>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </BlogProvider>
   );
 }

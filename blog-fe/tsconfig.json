@@ -15,6 +15,6 @@
     "isolatedModules": true,
     "jsx": "preserve"
   },
-  "include": ["next-env.d.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.tsx", "pages/api/edit/[postId].js"],
   "exclude": ["node_modules"]
 }
